@@ -76,3 +76,15 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.code pre {
+  padding: 0 !important;
+  margin: 0 !important;
+  background-color: transparent !important;
+}
+
+.code pre code {
+  padding: 0 !important;
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+}

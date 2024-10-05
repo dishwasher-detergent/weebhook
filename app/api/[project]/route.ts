@@ -1,10 +1,16 @@
-import { databaseService } from "@/lib/appwrite";
-import { PROJECT_COLLECTION_ID, REQUEST_COLLECTION_ID } from "@/lib/constants";
+import {
+  DATABASE_ID,
+  PROJECT_COLLECTION_ID,
+  REQUEST_COLLECTION_ID,
+} from "@/lib/constants";
+import { createAdminClient } from "@/lib/server/appwrite";
+import { ID } from "node-appwrite";
 
 export async function POST(
   request: Request,
   { params }: { params: { project: string } }
 ) {
+  const { database } = await createAdminClient();
   const projectId = params.project;
   const res = await request.json();
   const headers: Record<string, string> = {};
@@ -13,8 +19,14 @@ export async function POST(
     headers[key] = value;
   });
 
+  let project;
+
   try {
-    await databaseService.get(PROJECT_COLLECTION_ID, projectId);
+    project = await database.getDocument(
+      DATABASE_ID,
+      PROJECT_COLLECTION_ID,
+      projectId
+    );
   } catch (error) {
     return Response.json(
       { error: `Project ID '${projectId}' was not found.` },
@@ -23,11 +35,17 @@ export async function POST(
   }
 
   try {
-    const data = await databaseService.create(REQUEST_COLLECTION_ID, {
-      projectId: projectId,
-      headers: JSON.stringify(headers),
-      body: JSON.stringify(res),
-    });
+    const data = await database.createDocument(
+      DATABASE_ID,
+      REQUEST_COLLECTION_ID,
+      ID.unique(),
+      {
+        projectId: projectId,
+        headers: JSON.stringify(headers),
+        body: JSON.stringify(res),
+      },
+      project.$permissions
+    );
 
     return Response.json(data);
   } catch (error) {

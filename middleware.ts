@@ -40,9 +40,7 @@ export default async function middleware(req: NextRequest) {
     hostname === "localhost:3000" ||
     hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN
   ) {
-    return NextResponse.rewrite(
-      new URL(`/${path === "/" ? "" : path}`, req.url)
-    );
+    return NextResponse.rewrite(req.url);
   }
 
   const route = hostname.split(".")[0];
