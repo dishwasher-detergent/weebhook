@@ -14,4 +14,4 @@ export const USER_COLLECTION_ID = process.env
   .NEXT_PUBLIC_USER_COLLECTION_ID as string;
 
 // Cookie
-export const COOKIE_KEY = "weebhook";
+export const COOKIE_KEY = `a_session_${PROJECT_ID}`;

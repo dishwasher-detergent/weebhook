@@ -1,6 +1,6 @@
-import { Models } from "node-appwrite";
+import { Models } from "appwrite";
 
-export interface RequestItem extends Models.Document {
+export interface Request extends Models.Document {
   projectId: string;
   headers: string;
   body: string;

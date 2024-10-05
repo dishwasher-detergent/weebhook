@@ -31,6 +31,9 @@ export async function createSessionClient() {
     get storage() {
       return new Storage(client);
     },
+    get client() {
+      return client;
+    },
   };
 }
 

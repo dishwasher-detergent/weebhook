@@ -1,3 +1,4 @@
+import { Dev } from "@/providers/jotai-devtools";
 import { Karla } from "next/font/google";
 import "./globals.css";
 
@@ -12,7 +13,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${font.className} antialiased`}>{children}</body>
+      <body className={`${font.className} antialiased`}>
+        {children}
+        <Dev />
+      </body>
     </html>
   );
 }
