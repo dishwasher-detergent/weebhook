@@ -4,6 +4,7 @@ import { projectId } from "@/atoms/project";
 import { RequestChart } from "@/components/request-chart";
 import { Project } from "@/components/ui/project";
 import { Request } from "@/components/ui/request";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Request as RequestItem } from "@/interfaces/request.interface";
 import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, REQUEST_COLLECTION_ID } from "@/lib/constants";
@@ -37,24 +38,38 @@ export default function ProjectPage() {
   const projectIdValue = useAtomValue(projectId);
   const [chartData, setChartData] = useState<RequestsPerHour[]>([]);
   const [requests, setRequests] = useState<RequestItem[]>([]);
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const { client, database } = createClient();
 
   useEffect(() => {
     async function fetchRequests(projectId: string) {
-      const { database } = await createClient();
+      setLoading(true);
 
       const data = await database.listDocuments<RequestItem>(
         DATABASE_ID,
         REQUEST_COLLECTION_ID,
-        [Query.equal("projectId", projectId)]
+        [Query.equal("projectId", projectId), Query.orderDesc("$createdAt")]
       );
 
       setRequests(data.documents);
       setChartData(countRequestsPerHour(data.documents));
+      setLoading(false);
     }
 
     if (projectIdValue) {
       fetchRequests(projectIdValue);
     }
+  }, [projectIdValue]);
+
+  useEffect(() => {
+    const unsubscribe = client.subscribe(
+      `databases.*.collections.*`,
+      (response) => {
+        console.log("response", response);
+      }
+    );
+
+    return unsubscribe;
   }, [projectIdValue]);
 
   return (
@@ -66,17 +81,39 @@ export default function ProjectPage() {
       </header>
       <main className="max-w-4xl mx-auto space-y-4 p-4">
         <h2 className="font-bold text-primary">Requests Per Hour</h2>
-        <RequestChart data={chartData} />
+        {!isLoading ? (
+          <>
+            {chartData.length > 0 && <RequestChart data={chartData} />}
+            {chartData.length === 0 && (
+              <div className="p-4 rounded-xl border border-dashed text-muted-foreground font-bold text-sm">
+                No requests have been recieved.
+              </div>
+            )}
+          </>
+        ) : (
+          <Skeleton className="w-full h-48" />
+        )}
         <h2 className="font-bold text-primary">Requests</h2>
-        {requests.map((item) => (
-          <Request
-            key={item.$id}
-            method="post"
-            timestamp={item.$createdAt}
-            body={item.body}
-            headers={item.headers}
-          />
-        ))}
+        {!isLoading ? (
+          <>
+            {requests.map((item) => (
+              <Request
+                key={item.$id}
+                method="post"
+                timestamp={item.$createdAt}
+                body={item.body}
+                headers={item.headers}
+              />
+            ))}
+            {requests.length === 0 && (
+              <div className="p-4 rounded-xl border border-dashed text-muted-foreground font-bold text-sm">
+                No requests have been recieved.
+              </div>
+            )}
+          </>
+        ) : (
+          <Skeleton className="w-full h-48" />
+        )}
       </main>
     </>
   );

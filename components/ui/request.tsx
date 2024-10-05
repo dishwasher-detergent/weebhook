@@ -28,20 +28,23 @@ export function Request({ timestamp, method, headers, body }: RequestProps) {
           Headers
         </h4>
         <div className="rounded-xl border border-dashed overflow-x-auto bg-background">
-          <Table>
-            <TableBody>
-              <TableRow>
-                <TableCell>INV001</TableCell>
-                <TableCell>Paid</TableCell>
-              </TableRow>
-              {Object.entries(headerObj).map(([key, value]) => (
-                <TableRow key={key}>
-                  <TableCell>{key}</TableCell>
-                  <TableCell>{value}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          {Object.keys(headerObj).length > 0 && (
+            <Table>
+              <TableBody>
+                {Object.entries(headerObj).map(([key, value]) => (
+                  <TableRow key={key}>
+                    <TableCell>{key}</TableCell>
+                    <TableCell>{value}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+          {Object.keys(headerObj).length === 0 && (
+            <div className="p-4 text-muted-foreground font-bold text-sm">
+              No header values found.
+            </div>
+          )}
         </div>
       </div>
       <div>
