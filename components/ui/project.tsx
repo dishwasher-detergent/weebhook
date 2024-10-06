@@ -2,11 +2,6 @@
 
 import { projectId } from "@/atoms/project";
 import { Button } from "@/components/ui/button";
-import { Project as ProjectItem } from "@/interfaces/project.interface";
-import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
-import { DATABASE_ID, HOSTNAME, PROJECT_COLLECTION_ID } from "@/lib/constants";
-import { generate } from "random-words";
-
 import {
   Command,
   CommandEmpty,
@@ -21,12 +16,23 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Project as ProjectItem } from "@/interfaces/project.interface";
+import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
+import { DATABASE_ID, HOSTNAME, PROJECT_COLLECTION_ID } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 import { Permission, Role } from "appwrite";
 import { useAtom } from "jotai";
-import { Check, ChevronsUpDown, LucideCopy, LucidePlus } from "lucide-react";
+import {
+  Check,
+  ChevronsUpDown,
+  LucideCopy,
+  LucideCopyCheck,
+  LucidePlus,
+  LucideShare2,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
+import { generate } from "random-words";
 import { useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
@@ -36,6 +42,7 @@ export function Project() {
   const [projectIdValue, setProjectIdValue] = useAtom(projectId);
   const [open, setOpen] = useState(false);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [copy, setCopy] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchProjects() {
@@ -79,6 +86,16 @@ export function Project() {
     );
 
     setProjects([...projects, data]);
+    setProjectIdValue(data.$id);
+    router.replace(data.$id);
+  }
+
+  function onCopy() {
+    setCopy(true);
+
+    setTimeout(() => {
+      setCopy(false);
+    }, 1000);
   }
 
   return (
@@ -96,13 +113,7 @@ export function Project() {
               {projectIdValue ? (
                 <>
                   http://
-                  <span className="font-bold">
-                    {
-                      projects.find((project) => project.$id === projectIdValue)
-                        ?.$id
-                    }
-                  </span>
-                  .{HOSTNAME}
+                  <span className="font-bold">{projectIdValue}</span>.{HOSTNAME}
                 </>
               ) : (
                 "Select project..."
@@ -110,7 +121,7 @@ export function Project() {
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-0">
+          <PopoverContent className="p-0" align="start">
             <Command>
               <CommandInput placeholder="Search project..." />
               <CommandList>
@@ -153,11 +164,21 @@ export function Project() {
             </Command>
           </PopoverContent>
         </Popover>
-        <CopyToClipboard text={`http://${projectIdValue}.${HOSTNAME}`}>
-          <Button variant="ghost" size="icon">
-            <LucideCopy className="size-3" />
+        <CopyToClipboard
+          text={`http://${projectIdValue}.${HOSTNAME}`}
+          onCopy={onCopy}
+        >
+          <Button variant="outline" size="icon">
+            {!copy ? (
+              <LucideCopy className="size-3" />
+            ) : (
+              <LucideCopyCheck className="size-3 text-green-700" />
+            )}
           </Button>
         </CopyToClipboard>
+        <Button variant="outline" size="icon">
+          <LucideShare2 className="size-3" />
+        </Button>
       </div>
     </div>
   );

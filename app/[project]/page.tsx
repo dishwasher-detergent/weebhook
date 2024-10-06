@@ -9,7 +9,8 @@ import { Request as RequestItem } from "@/interfaces/request.interface";
 import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, REQUEST_COLLECTION_ID } from "@/lib/constants";
 
-import { useAtomValue } from "jotai";
+import { useAtom } from "jotai";
+import { usePathname, useRouter } from "next/navigation";
 import { Query } from "node-appwrite";
 import { useEffect, useState } from "react";
 
@@ -35,11 +36,13 @@ const countRequestsPerHour = (items: RequestItem[]): RequestsPerHour[] => {
 };
 
 export default function ProjectPage() {
-  const projectIdValue = useAtomValue(projectId);
+  const [projectIdValue, setProjectId] = useAtom(projectId);
   const [chartData, setChartData] = useState<RequestsPerHour[]>([]);
   const [requests, setRequests] = useState<RequestItem[]>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
   const { client, database } = createClient();
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     async function fetchRequests(projectId: string) {
@@ -61,25 +64,37 @@ export default function ProjectPage() {
     }
   }, [projectIdValue]);
 
-  useEffect(() => {
-    const unsubscribe = client.subscribe(
-      `databases.*.collections.*`,
-      (response) => {
-        console.log("response", response);
-      }
-    );
+  // useEffect(() => {
+  //   const unsubscribe = client.subscribe(
+  //     `databases.*.collections.*`,
+  //     (response) => {
+  //       console.log("response", response);
+  //     }
+  //   );
 
-    return unsubscribe;
+  //   return unsubscribe;
+  // }, [projectIdValue]);
+
+  useEffect(() => {
+    if (projectIdValue) {
+      router.replace(projectIdValue);
+    }
   }, [projectIdValue]);
+
+  useEffect(() => {
+    if (pathname) {
+      setProjectId(pathname.slice(1));
+    }
+  }, [pathname]);
 
   return (
     <>
-      <header className="border-b sticky top-0 bg-background/50 backdrop-blur-sm z-10">
-        <div className="max-w-4xl mx-auto p-4">
+      <header className="w-full border-b sticky top-0 bg-background/50 backdrop-blur-sm z-10">
+        <div className="max-w-4xl mx-auto p-4 px-8">
           <Project />
         </div>
       </header>
-      <main className="max-w-4xl mx-auto space-y-4 p-4">
+      <main className="max-w-4xl mx-auto space-y-4 p-4 px-8">
         <h2 className="font-bold text-primary">Requests Per Hour</h2>
         {!isLoading ? (
           <>
