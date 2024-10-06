@@ -17,11 +17,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Project as ProjectItem } from "@/interfaces/project.interface";
-import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
+import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, HOSTNAME, PROJECT_COLLECTION_ID } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { cn, createWebhook } from "@/lib/utils";
 
-import { Permission, Role } from "appwrite";
 import { useAtom } from "jotai";
 import {
   Check,
@@ -32,7 +31,6 @@ import {
   LucideShare2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { generate } from "random-words";
 import { useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
@@ -59,35 +57,14 @@ export function Project() {
     fetchProjects();
   }, []);
 
-  async function createWebhook() {
-    const { database, team } = createClient();
-    const user = await getLoggedInUser();
-    const id = generate({ exactly: 1, wordsPerString: 3, separator: "-" });
+  async function create() {
+    const data = await createWebhook();
 
-    if (!user) {
-      return;
+    if (data) {
+      setProjects([...projects, data]);
+      setProjectIdValue(data.$id);
+      router.replace(data.$id);
     }
-
-    const teamData = await team.create(id[0], id[0]);
-
-    const data = await database.createDocument<ProjectItem>(
-      DATABASE_ID,
-      PROJECT_COLLECTION_ID,
-      id[0],
-      {
-        shared: false,
-        description: null,
-      },
-      [
-        Permission.read(Role.team(teamData.$id)),
-        Permission.read(Role.user(user?.$id)),
-        Permission.write(Role.user(user?.$id)),
-      ]
-    );
-
-    setProjects([...projects, data]);
-    setProjectIdValue(data.$id);
-    router.replace(data.$id);
   }
 
   function onCopy() {
@@ -156,7 +133,7 @@ export function Project() {
               <Button
                 variant="ghost"
                 className="justify-start rounded-none"
-                onClick={createWebhook}
+                onClick={create}
               >
                 <LucidePlus className="size-3 mr-2" />
                 Create Webhook

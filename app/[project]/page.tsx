@@ -1,9 +1,9 @@
 "use client";
 
 import { projectId } from "@/atoms/project";
+import { Project } from "@/components/project";
+import { Request } from "@/components/request";
 import { RequestChart } from "@/components/request-chart";
-import { Project } from "@/components/ui/project";
-import { Request } from "@/components/ui/request";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Request as RequestItem } from "@/interfaces/request.interface";
 import { createClient } from "@/lib/client/appwrite";
@@ -24,7 +24,7 @@ const countRequestsPerHour = (items: RequestItem[]): RequestsPerHour[] => {
 
   items.forEach((item) => {
     const date = new Date(item.$createdAt);
-    const hourKey = date.toISOString().slice(0, 13); // Get 'YYYY-MM-DDTHH'
+    const hourKey = date.toISOString().slice(0, 13);
 
     counts[hourKey] = (counts[hourKey] || 0) + 1;
   });
