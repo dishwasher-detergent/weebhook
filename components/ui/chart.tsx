@@ -1,7 +1,5 @@
 "use client"
 
-// @ts-nocheck
-
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
 import {

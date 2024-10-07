@@ -14,7 +14,7 @@ export default async function SharePage() {
     <Card className="w-full max-w-sm">
       <CardHeader>
         <CardTitle className="text-2xl">Shared</CardTitle>
-        <CardDescription>You've had a webhook shared with you.</CardDescription>
+        <CardDescription>You&apos;ve had a webhook shared with you.</CardDescription>
       </CardHeader>
       <CardFooter>
         <Button className="w-full" type="submit">
