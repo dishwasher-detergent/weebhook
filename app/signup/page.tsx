@@ -17,11 +17,11 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ID } from "node-appwrite";
 
-async function signUpWithEmail(formData: any) {
+async function signUpWithEmail(formData: FormData) {
   "use server";
 
-  const email = formData.get("email");
-  const password = formData.get("password");
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
 
   const { account } = await createAdminClient();
 

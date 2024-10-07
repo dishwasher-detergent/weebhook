@@ -40,7 +40,7 @@ export default function ProjectPage() {
   const [chartData, setChartData] = useState<RequestsPerHour[]>([]);
   const [requests, setRequests] = useState<RequestItem[]>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
-  const { client, database } = createClient();
+  const { database } = createClient();
   const router = useRouter();
   const pathname = usePathname();
 

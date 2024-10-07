@@ -27,7 +27,7 @@ export async function POST(
       PROJECT_COLLECTION_ID,
       projectId
     );
-  } catch (error) {
+  } catch () {
     return Response.json(
       { error: `Project ID '${projectId}' was not found.` },
       { status: 404 }
@@ -48,7 +48,7 @@ export async function POST(
     );
 
     return Response.json(data);
-  } catch (error) {
+  } catch () {
     return Response.json(
       { error: "Failed to create request" },
       { status: 500 }

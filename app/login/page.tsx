@@ -16,11 +16,11 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-async function signInWithEmail(formData: any) {
+async function signInWithEmail(formData: FormData) {
   "use server";
 
-  const email = formData.get("email");
-  const password = formData.get("password");
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
 
   const { account } = await createAdminClient();
 
@@ -72,7 +72,7 @@ export default async function LoginPage() {
             />
           </div>
           <p className="font-semibold text-sm">
-            Don't have an account? <Link href="/signup">Create one here</Link>.
+            Don&apos;t have an account? <Link href="/signup">Create one here</Link>.
           </p>
         </CardContent>
         <CardFooter>

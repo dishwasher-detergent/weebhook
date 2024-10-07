@@ -6,7 +6,6 @@ import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
 import { DATABASE_ID, PROJECT_COLLECTION_ID } from "@/lib/constants";
 import { createWebhook } from "@/lib/utils";
 
-import { Models } from "appwrite";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { Query } from "node-appwrite";
