@@ -6,6 +6,7 @@ import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
 import { DATABASE_ID, PROJECT_COLLECTION_ID } from "@/lib/constants";
 import { createWebhook } from "@/lib/utils";
 
+import { Models } from 'appwrite';
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { Query } from "node-appwrite";
@@ -13,14 +14,14 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [projectIdValue, setProjectId] = useAtom(projectId);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
   const router = useRouter();
   const { database } = createClient();
 
   useEffect(() => {
     async function checkLoginStatus() {
-      const loggedIn = await getLoggedInUser(); // Replace with your actual auth check
-      setIsLoggedIn(loggedIn);
+      const userData = await getLoggedInUser(); // Replace with your actual auth check
+      setUser(userData);
     }
 
     checkLoginStatus();
@@ -39,14 +40,14 @@ export default function Home() {
       }
     }
 
-    if (isLoggedIn) {
+    if (user) {
       if (projectIdValue) {
         router.replace(projectIdValue);
       } else {
         getProjects();
       }
     }
-  }, [isLoggedIn, projectIdValue]);
+  }, [user, projectIdValue]);
 
   async function create() {
     const data = await createWebhook();
@@ -57,7 +58,7 @@ export default function Home() {
     }
   }
 
-  if (!isLoggedIn) {
+  if (!user) {
     return <div>Please log in to view your projects.</div>;
   }
 
