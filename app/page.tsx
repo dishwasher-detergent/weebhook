@@ -6,7 +6,7 @@ import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
 import { DATABASE_ID, PROJECT_COLLECTION_ID } from "@/lib/constants";
 import { createWebhook } from "@/lib/utils";
 
-import { Models } from 'appwrite';
+import { Models } from "appwrite";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { Query } from "node-appwrite";
@@ -14,13 +14,15 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [projectIdValue, setProjectId] = useAtom(projectId);
-  const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
+  const [user, setUser] = useState<Models.User<Models.Preferences> | null>(
+    null
+  );
   const router = useRouter();
   const { database } = createClient();
 
   useEffect(() => {
     async function checkLoginStatus() {
-      const userData = await getLoggedInUser(); // Replace with your actual auth check
+      const userData = await getLoggedInUser();
       setUser(userData);
     }
 
@@ -67,4 +69,4 @@ export default function Home() {
       <Button onClick={create}>Create Webhook</Button>
     </div>
   );
-};
+}
