@@ -14,8 +14,6 @@ export const config = {
 };
 
 export default async function middleware(req: NextRequest) {
-  const url = req.nextUrl;
-
   let hostname = req.headers
     .get("host")!
     .replace(".localhost:3000", `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
@@ -30,15 +28,10 @@ export default async function middleware(req: NextRequest) {
     }`;
   }
 
-  const searchParams = req.nextUrl.searchParams.toString();
-
-  const path = `${url.pathname}${
-    searchParams.length > 0 ? `?${searchParams}` : ""
-  }`;
-
   if (
     hostname === "localhost:3000" ||
-    hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN
+    hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN ||
+    hostname === `www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
   ) {
     return NextResponse.rewrite(req.url);
   }
