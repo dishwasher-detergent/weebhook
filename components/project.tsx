@@ -76,7 +76,7 @@ export function Project() {
 
   return (
     <div>
-      <p className="font-bold text-primary text-sm">Webhook</p>
+      <p className="font-bold text-primary text-sm mb-1">Webhook</p>
       <div className="flex flex-row gap-1 items-center">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>

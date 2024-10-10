@@ -15,7 +15,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Query } from "node-appwrite";
 import { useEffect, useState } from "react";
 
-interface RequestsPerHour {
+export interface RequestsPerHour {
   hour: string;
   requests: number;
 }

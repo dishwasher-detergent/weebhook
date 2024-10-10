@@ -1,5 +1,6 @@
 "use client";
 
+import { RequestsPerHour } from "@/app/[project]/page";
 import {
   ChartConfig,
   ChartContainer,
@@ -8,16 +9,18 @@ import {
 } from "@/components/ui/chart";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { CartesianGrid, LabelList, Line, LineChart, XAxis } from "recharts";
+import { LucideActivity } from "lucide-react";
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
 const chartConfig = {
-  desktop: {
-    label: "Request",
+  requests: {
+    label: "Requests",
     color: "hsl(var(--chart-1))",
+    icon: LucideActivity,
   },
 } satisfies ChartConfig;
 
-export function RequestChart({ data }: any) {
+export function RequestChart({ data }: { data: RequestsPerHour[] }) {
   return (
     <AnimatePresence>
       <motion.div
@@ -28,7 +31,7 @@ export function RequestChart({ data }: any) {
         className="rounded-xl border border-dashed overflow-hidden"
       >
         <ChartContainer config={chartConfig} className="h-48 w-full">
-          <LineChart
+          <AreaChart
             accessibilityLayer
             data={data}
             margin={{
@@ -44,32 +47,19 @@ export function RequestChart({ data }: any) {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(-2)}
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Line
+            <Area
               dataKey="requests"
               type="step"
-              stroke="var(--color-desktop)"
-              strokeWidth={2}
-              dot={{
-                fill: "var(--color-desktop)",
-              }}
-              activeDot={{
-                r: 6,
-              }}
-            >
-              <LabelList
-                position="top"
-                offset={12}
-                className="fill-foreground"
-                fontSize={12}
-              />
-            </Line>
-          </LineChart>
+              fill="var(--color-requests)"
+              fillOpacity={0.4}
+              stroke="var(--color-requests)"
+            />
+          </AreaChart>
         </ChartContainer>
       </motion.div>
     </AnimatePresence>
