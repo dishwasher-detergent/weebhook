@@ -1,6 +1,7 @@
 "use client";
 
 import { projectId } from "@/atoms/project";
+import { NoRequests } from "@/components/no-requests";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
@@ -74,16 +75,16 @@ export default function Home() {
             <Button onClick={create}>Create Webhook</Button>
           ) : (
             <Button asChild>
-              <Link href="/login">Login</Link>
+              <Link href="/login">Login To Create A Webhook</Link>
             </Button>
           )}
         </div>
       </header>
       <main className="max-w-4xl mx-auto space-y-4 p-4 px-8">
         <h2 className="font-bold text-primary">Requests Per Hour</h2>
-        <Skeleton className="w-full h-48" />
+        <NoRequests />
         <h2 className="font-bold text-primary">Requests</h2>
-        <Skeleton className="w-full h-48" />
+        <NoRequests />
       </main>
     </>
   );
