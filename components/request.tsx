@@ -9,12 +9,11 @@ import { coy } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 export interface RequestProps {
   timestamp: string;
-  method: "get" | "post" | "put" | "patch" | "delete";
   headers: string;
   body: string;
 }
 
-export function Request({ timestamp, method, headers, body }: RequestProps) {
+export function Request({ timestamp, headers, body }: RequestProps) {
   const headerObj: Record<string, string> = JSON.parse(headers);
 
   return (
@@ -28,7 +27,7 @@ export function Request({ timestamp, method, headers, body }: RequestProps) {
       >
         <header className="flex flex-row gap-2 items-center justify-between cursor-pointer">
           <div className="flex flex-row gap-2 items-center">
-            <Badge variant={method}>{method.toUpperCase()}</Badge>
+            <Badge variant="default">POST</Badge>
             <p className="text-muted-foreground text-sm font-semibold">
               {timestamp}
             </p>
@@ -36,7 +35,7 @@ export function Request({ timestamp, method, headers, body }: RequestProps) {
         </header>
 
         <div>
-          <h4 className="font-semibold text-primary text-base mb-1 ml-2">
+          <h4 className="font-semibold text-primary-foreground text-base mb-1 ml-2">
             Headers
           </h4>
           <div className="rounded-xl border border-dashed overflow-x-auto bg-background">
@@ -60,7 +59,7 @@ export function Request({ timestamp, method, headers, body }: RequestProps) {
           </div>
         </div>
         <div>
-          <h4 className="font-semibold text-primary text-base mb-1 ml-2">
+          <h4 className="font-semibold text-primary-foreground text-base mb-1 ml-2">
             Body
           </h4>
           <div className="p-4 rounded-xl border border-dashed bg-background code">

@@ -4,7 +4,8 @@ import {
   REQUEST_COLLECTION_ID,
 } from "@/lib/constants";
 import { createAdminClient } from "@/lib/server/appwrite";
-import { ID } from "node-appwrite";
+
+import { ID, Permission, Role } from "node-appwrite";
 
 export async function POST(
   request: Request,
@@ -44,7 +45,7 @@ export async function POST(
         headers: JSON.stringify(headers),
         body: JSON.stringify(res),
       },
-      project.$permissions
+      [Permission.read(Role.any())]
     );
 
     return Response.json(data);

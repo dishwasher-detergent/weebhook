@@ -25,7 +25,7 @@ const countRequestsPerHour = (items: RequestItem[]): RequestsPerHour[] => {
 
   items.forEach((item) => {
     const date = new Date(item.$createdAt);
-    const hourKey = date.toISOString().slice(0, 13);
+    const hourKey = date.getHours();
 
     counts[hourKey] = (counts[hourKey] || 0) + 1;
   });
@@ -41,7 +41,7 @@ export default function ProjectPage() {
   const [chartData, setChartData] = useState<RequestsPerHour[]>([]);
   const [requests, setRequests] = useState<RequestItem[]>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
-  const { database } = createClient();
+  const { database, client } = createClient();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -56,7 +56,6 @@ export default function ProjectPage() {
       );
 
       setRequests(data.documents);
-      setChartData(countRequestsPerHour(data.documents));
       setLoading(false);
     }
 
@@ -65,16 +64,25 @@ export default function ProjectPage() {
     }
   }, [projectIdValue]);
 
-  // useEffect(() => {
-  //   const unsubscribe = client.subscribe(
-  //     `databases.*.collections.*`,
-  //     (response) => {
-  //       console.log("response", response);
-  //     }
-  //   );
+  useEffect(() => {
+    setChartData(countRequestsPerHour(requests));
+  }, [requests]);
 
-  //   return unsubscribe;
-  // }, [projectIdValue]);
+  useEffect(() => {
+    const unsubscribe = client.subscribe(
+      `databases.${DATABASE_ID}.collections.${REQUEST_COLLECTION_ID}.documents`,
+      (response) => {
+        const req = response.payload as RequestItem;
+        if (req.projectId == projectIdValue) {
+          setRequests([req, ...requests]);
+        }
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, [projectIdValue, requests]);
 
   useEffect(() => {
     if (projectIdValue) {
@@ -96,7 +104,7 @@ export default function ProjectPage() {
         </div>
       </header>
       <main className="max-w-4xl mx-auto space-y-4 p-4 px-8">
-        <h2 className="font-bold text-primary">Requests Per Hour</h2>
+        <h2 className="font-bold text-primary-foreground">Requests Per Hour</h2>
         {!isLoading ? (
           <>
             {chartData.length > 0 && <RequestChart data={chartData} />}
@@ -105,13 +113,12 @@ export default function ProjectPage() {
         ) : (
           <Skeleton className="w-full h-48" />
         )}
-        <h2 className="font-bold text-primary">Requests</h2>
+        <h2 className="font-bold text-primary-foreground">Requests</h2>
         {!isLoading ? (
           <>
             {requests.map((item) => (
               <Request
                 key={item.$id}
-                method="post"
                 timestamp={item.$createdAt}
                 body={item.body}
                 headers={item.headers}

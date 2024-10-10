@@ -76,7 +76,7 @@ export function Project() {
 
   return (
     <div>
-      <p className="font-bold text-primary text-sm mb-1">Webhook</p>
+      <p className="font-bold text-primary-foreground text-sm mb-1">Webhook</p>
       <div className="flex flex-row gap-1 items-center">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
@@ -146,7 +146,7 @@ export function Project() {
             {!copy ? (
               <LucideCopy className="size-3" />
             ) : (
-              <LucideCopyCheck className="size-3 text-green-700" />
+              <LucideCopyCheck className="size-3 text-green-400" />
             )}
           </Button>
         </CopyToClipboard>

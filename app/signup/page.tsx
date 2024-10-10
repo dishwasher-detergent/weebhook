@@ -43,7 +43,7 @@ export default async function SignUpPage() {
   if (user) redirect("/account");
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm bg-muted">
       <CardHeader>
         <CardTitle className="text-2xl">Create Account</CardTitle>
         <CardDescription>
@@ -79,7 +79,7 @@ export default async function SignUpPage() {
           </Button>
         </CardFooter>
         <CardFooter>
-          <p className="p-4 rounded-xl border border-dashed text-muted-foreground font-bold text-sm overflow-hidden w-full">
+          <p className="bg-background p-4 rounded-xl border border-dashed text-muted-foreground font-bold text-sm overflow-hidden w-full">
             Already have an account?
             <Button
               variant="link"

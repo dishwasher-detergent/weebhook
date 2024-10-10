@@ -15,7 +15,7 @@ import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 const chartConfig = {
   requests: {
     label: "Requests",
-    color: "hsl(var(--chart-1))",
+    color: "hsl(var(--chart-4))",
     icon: LucideActivity,
   },
 } satisfies ChartConfig;
@@ -35,9 +35,9 @@ export function RequestChart({ data }: { data: RequestsPerHour[] }) {
             accessibilityLayer
             data={data}
             margin={{
-              top: 36,
-              left: 16,
-              right: 16,
+              top: 32,
+              left: 32,
+              right: 32,
               bottom: 8,
             }}
           >
@@ -47,6 +47,7 @@ export function RequestChart({ data }: { data: RequestsPerHour[] }) {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              tickFormatter={(value) => `${value}:00`}
             />
             <ChartTooltip
               cursor={false}
