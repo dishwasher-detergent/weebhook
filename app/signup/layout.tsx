@@ -4,8 +4,6 @@ export default async function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="grid place-items-center w-full min-h-dvh bg-muted">
-      {children}
-    </main>
+    <main className="grid place-items-center w-full min-h-dvh">{children}</main>
   );
 }

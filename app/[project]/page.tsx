@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Request as RequestItem } from "@/interfaces/request.interface";
 import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, REQUEST_COLLECTION_ID } from "@/lib/constants";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { useAtom } from "jotai";
 import { usePathname, useRouter } from "next/navigation";
@@ -97,20 +98,26 @@ export default function ProjectPage() {
       <main className="max-w-4xl mx-auto space-y-4 p-4 px-8">
         <h2 className="font-bold text-primary">Requests Per Hour</h2>
         {!isLoading ? (
-          <>
+          <AnimatePresence>
             {chartData.length > 0 && <RequestChart data={chartData} />}
             {chartData.length === 0 && (
-              <div className="p-4 rounded-xl border border-dashed text-muted-foreground font-bold text-sm">
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "12rem" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.25 }}
+                className="p-4 grid place-items-center rounded-xl border border-dashed text-muted-foreground font-bold text-sm overflow-hidden"
+              >
                 No requests have been recieved.
-              </div>
+              </motion.div>
             )}
-          </>
+          </AnimatePresence>
         ) : (
           <Skeleton className="w-full h-48" />
         )}
         <h2 className="font-bold text-primary">Requests</h2>
         {!isLoading ? (
-          <>
+          <AnimatePresence>
             {requests.map((item) => (
               <Request
                 key={item.$id}
@@ -121,11 +128,17 @@ export default function ProjectPage() {
               />
             ))}
             {requests.length === 0 && (
-              <div className="p-4 rounded-xl border border-dashed text-muted-foreground font-bold text-sm">
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "12rem" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.25 }}
+                className="p-4 grid place-items-center rounded-xl border border-dashed text-muted-foreground font-bold text-sm overflow-hidden"
+              >
                 No requests have been recieved.
-              </div>
+              </motion.div>
             )}
-          </>
+          </AnimatePresence>
         ) : (
           <Skeleton className="w-full h-48" />
         )}

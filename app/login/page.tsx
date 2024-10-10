@@ -71,14 +71,23 @@ export default async function LoginPage() {
               minLength={8}
             />
           </div>
-          <p className="font-semibold text-sm">
-            Don&apos;t have an account? <Link href="/signup">Create one here</Link>.
-          </p>
         </CardContent>
         <CardFooter>
           <Button className="w-full" type="submit">
             Login
           </Button>
+        </CardFooter>
+        <CardFooter>
+          <p className="p-4 rounded-xl border border-dashed text-muted-foreground font-bold text-sm overflow-hidden w-full">
+            Don&apos;t have an account?
+            <Button
+              variant="link"
+              asChild
+              className="text-muted-foreground font-bold p-1"
+            >
+              <Link href="/signup">Create one here</Link>
+            </Button>
+          </p>
         </CardFooter>
       </form>
     </Card>

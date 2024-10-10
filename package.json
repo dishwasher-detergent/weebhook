@@ -19,6 +19,7 @@
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
     "cookies-next": "^4.2.1",
+    "framer-motion": "^11.11.7",
     "jotai": "^2.10.0",
     "jotai-devtools": "^0.10.1",
     "lucide-react": "^0.447.0",

@@ -28,7 +28,6 @@ import {
   LucideCopy,
   LucideCopyCheck,
   LucidePlus,
-  LucideShare2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -109,9 +108,7 @@ export function Project() {
                       key={project.$id}
                       value={project.$id}
                       onSelect={(currentValue) => {
-                        setProjectIdValue(
-                          currentValue === projectIdValue ? "" : currentValue
-                        );
+                        setProjectIdValue(currentValue);
                         setOpen(false);
                         router.replace(project.$id);
                       }}
@@ -153,9 +150,6 @@ export function Project() {
             )}
           </Button>
         </CopyToClipboard>
-        <Button variant="outline" size="icon">
-          <LucideShare2 className="size-3" />
-        </Button>
       </div>
     </div>
   );

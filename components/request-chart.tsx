@@ -6,6 +6,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+
+import { motion } from "framer-motion";
 import { CartesianGrid, LabelList, Line, LineChart, XAxis } from "recharts";
 
 const chartConfig = {
@@ -17,7 +19,13 @@ const chartConfig = {
 
 export function RequestChart({ data }: any) {
   return (
-    <div className="rounded-xl border border-dashed">
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: "auto" }}
+      exit={{ opacity: 0, height: 0 }}
+      transition={{ duration: 0.25 }}
+      className="rounded-xl border border-dashed overflow-hidden"
+    >
       <ChartContainer config={chartConfig} className="h-48 w-full">
         <LineChart
           accessibilityLayer
@@ -62,6 +70,6 @@ export function RequestChart({ data }: any) {
           </Line>
         </LineChart>
       </ChartContainer>
-    </div>
+    </motion.div>
   );
 }

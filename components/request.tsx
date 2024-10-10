@@ -3,6 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
+import { motion } from "framer-motion";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coy } from "react-syntax-highlighter/dist/esm/styles/prism";
 
@@ -17,7 +18,13 @@ export function Request({ timestamp, method, headers, body }: RequestProps) {
   const headerObj: Record<string, string> = JSON.parse(headers);
 
   return (
-    <div className="p-2 rounded-xl border border-dashed bg-muted/50 space-y-4">
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: "auto" }}
+      exit={{ opacity: 0, height: 0 }}
+      transition={{ duration: 0.25 }}
+      className="p-2 rounded-xl border border-dashed bg-muted/50 space-y-4"
+    >
       <header className="flex flex-row gap-2 items-center justify-between cursor-pointer">
         <div className="flex flex-row gap-2 items-center">
           <Badge variant={method}>{method.toUpperCase()}</Badge>
@@ -59,6 +66,6 @@ export function Request({ timestamp, method, headers, body }: RequestProps) {
           </SyntaxHighlighter>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
