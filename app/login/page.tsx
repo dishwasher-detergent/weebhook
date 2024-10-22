@@ -14,9 +14,14 @@ import { Label } from "@/components/ui/label";
 import { signInWithEmail } from "./action";
 
 import Link from "next/link";
-import { toast } from "sonner"
+import { useFormState } from 'react'
 
 export default async function LoginPage() {
+  const [state, formAction] = useFormState(signInWithEmail, {
+    email: "",
+    password: ""
+  })
+
   return (
     <Card className="w-full max-w-sm bg-muted">
       <CardHeader>
@@ -25,14 +30,7 @@ export default async function LoginPage() {
           Enter your email below to login to your account.
         </CardDescription>
       </CardHeader>
-      <form action={async (formData: any) => {
-          try {
-            signInWithEmail(formData)
-          } catch (err) {
-            const error = err as Error;
-            toast.error(error.message)
-          }
-        }}>
+      <form action={formAction}>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
