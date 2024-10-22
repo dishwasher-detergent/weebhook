@@ -15,6 +15,7 @@ import { createAdminClient, getLoggedInUser } from "@/lib/server/appwrite";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { toast } from "sonner"
 
 async function signInWithEmail(formData: FormData) {
   "use server";
@@ -48,7 +49,14 @@ export default async function LoginPage() {
           Enter your email below to login to your account.
         </CardDescription>
       </CardHeader>
-      <form action={signInWithEmail}>
+      <form action={async (formData: any) => {
+          try {
+            signInWithEmail(formData)
+          } catch (err) {
+            const error = err as Error;
+            toast.error(error.message)
+          }
+        }}>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>

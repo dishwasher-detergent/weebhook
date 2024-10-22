@@ -16,6 +16,7 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ID } from "node-appwrite";
+import { toast } from "sonner";
 
 async function signUpWithEmail(formData: FormData) {
   "use server";
@@ -50,7 +51,14 @@ export default async function SignUpPage() {
           Enter your email below to create to your account.
         </CardDescription>
       </CardHeader>
-      <form action={signUpWithEmail}>
+      <form action={async (formData: any) => {
+          try {
+            signUpWithEmail(formData)
+          } catch (err) {
+            const error = err as Error;
+            toast.error(error.message)
+          }
+        }}>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>

@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 import { Dev } from "@/providers/jotai-devtools";
@@ -19,6 +20,7 @@ export default function RootLayout({
       >
         {children}
         <Dev />
+        <Toaster />
       </body>
     </html>
   );
