@@ -12,7 +12,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { COOKIE_KEY } from "@/lib/constants";
-import { createAdminClient, getLoggedInUser } from "@/lib/server/appwrite";
+import { createAdminClient } from "@/lib/server/appwrite";
+import { getLoggedInUser } from "@/lib/client/appwrite";
 
 import { cookies } from "next/headers";
 import Link from "next/link";
