@@ -1,3 +1,5 @@
+"use server"
+
 import { COOKIE_KEY } from "@/lib/constants";
 import { createAdminClient } from "@/lib/server/appwrite";
 
@@ -6,8 +8,6 @@ import { redirect } from "next/navigation";
 import { ID } from "node-appwrite";
 
 export async function signUpWithEmail(formData: FormData) {
-    "use server";
-  
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
   
