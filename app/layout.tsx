@@ -2,10 +2,10 @@ import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 import { Dev } from "@/providers/jotai-devtools";
-import { Karla } from "next/font/google";
+import { IBMPlexMono } from "next/font/google";
 import { redirect } from "next/navigation";
 
-const font = Karla({
+const font = IBMPlexMono({
   subsets: ["latin"],
 });
 
