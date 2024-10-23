@@ -53,8 +53,10 @@ export function Project() {
       setProjects(data.documents);
     }
 
-    fetchProjects();
-  }, []);
+    if (projects.length == 0) {
+      fetchProjects();
+    }
+  }, [projects]);
 
   async function create() {
     const data = await createWebhook();
@@ -86,14 +88,9 @@ export function Project() {
               aria-expanded={open}
               className="justify-between"
             >
-              {projectIdValue ? (
-                <>
-                  http://
-                  <span className="font-bold">{projectIdValue}</span>.{HOSTNAME}
-                </>
-              ) : (
-                "Select project..."
-              )}
+              http://
+              <span className="font-bold">{projectIdValue ?? "loading"}</span>.
+              {HOSTNAME}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>

@@ -23,7 +23,7 @@ export function Request({ timestamp, headers, body }: RequestProps) {
         animate={{ opacity: 1, height: "auto" }}
         exit={{ opacity: 0, height: 0 }}
         transition={{ duration: 0.25 }}
-        className="p-2 rounded-xl border border-dashed bg-muted/50 space-y-4"
+        className="p-2 rounded-xl border border-dashed bg-muted/25 space-y-4"
       >
         <header className="flex flex-row gap-2 items-center justify-between cursor-pointer">
           <div className="flex flex-row gap-2 items-center">

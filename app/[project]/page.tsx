@@ -4,7 +4,6 @@ import { projectId } from "@/atoms/project";
 import { NoRequests } from "@/components/no-requests";
 import { Project } from "@/components/project";
 import { Request } from "@/components/request";
-import { RequestChart } from "@/components/request-chart";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Request as RequestItem } from "@/interfaces/request.interface";
 import { createClient } from "@/lib/client/appwrite";
@@ -104,15 +103,6 @@ export default function ProjectPage() {
         </div>
       </header>
       <main className="max-w-4xl mx-auto space-y-4 p-4 px-8">
-        <h2 className="font-bold text-primary-foreground">Requests Per Hour</h2>
-        {!isLoading ? (
-          <>
-            {chartData.length > 0 && <RequestChart data={chartData} />}
-            {chartData.length === 0 && <NoRequests />}
-          </>
-        ) : (
-          <Skeleton className="w-full h-48" />
-        )}
         <h2 className="font-bold text-primary-foreground">Requests</h2>
         {!isLoading ? (
           <>

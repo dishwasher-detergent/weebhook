@@ -21,6 +21,8 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function RequestChart({ data }: { data: RequestsPerHour[] }) {
+  console.log(data);
+
   return (
     <AnimatePresence>
       <motion.div

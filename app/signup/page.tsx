@@ -33,7 +33,7 @@ export default function SignUpPage() {
   }, [state]);
 
   return (
-    <Card className="w-full max-w-sm bg-muted">
+    <Card className="w-full max-w-sm bg-muted/25">
       <CardHeader>
         <CardTitle className="text-2xl">Create Account</CardTitle>
         <CardDescription>
@@ -42,11 +42,11 @@ export default function SignUpPage() {
       </CardHeader>
       <form action={formAction}>
         <CardContent className="grid gap-4">
-          {!state.success && (
+          {state.message != "" ? (
             <p className="text-destructive-foreground p-4 rounded-xl border border-destructive border-dashed font-bold text-sm overflow-hidden w-full">
               {state.message}
             </p>
-          )}
+          ) : null}
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -74,7 +74,7 @@ export default function SignUpPage() {
           </Button>
         </CardFooter>
         <CardFooter>
-          <p className="bg-background p-4 rounded-xl border border-dashed text-muted-foreground font-bold text-sm overflow-hidden w-full">
+          <p className="text-center bg-background p-2 rounded-xl border border-dashed text-muted-foreground font-bold text-sm overflow-hidden w-full">
             Already have an account?
             <Button
               variant="link"

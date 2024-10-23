@@ -33,7 +33,7 @@ export default function LoginPage() {
   }, [state]);
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm bg-muted/25">
       <CardHeader>
         <CardTitle className="text-2xl">Login</CardTitle>
         <CardDescription>
@@ -42,11 +42,11 @@ export default function LoginPage() {
       </CardHeader>
       <form action={formAction}>
         <CardContent className="grid gap-4">
-          {!state.success && (
+          {state.message != "" ? (
             <p className="text-destructive-foreground p-4 rounded-xl border border-destructive border-dashed font-bold text-sm overflow-hidden w-full">
               {state.message}
             </p>
-          )}
+          ) : null}
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
