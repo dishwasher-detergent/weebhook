@@ -7,10 +7,8 @@ import { createAdminClient } from "@/lib/server/appwrite";
 
 import { ID, Permission, Role } from "node-appwrite";
 
-export async function POST(
-  request: Request,
-  { params }: { params: { project: string } }
-) {
+export async function POST(request: Request, props: { params: Promise<{ project: string }> }) {
+  const params = await props.params;
   const { database } = await createAdminClient();
   const projectId = params.project;
   const res = await request.json();

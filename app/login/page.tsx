@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,16 +14,29 @@ import { Label } from "@/components/ui/label";
 import { signInWithEmail } from "./action";
 
 import Link from "next/link";
-import { useFormState } from 'react'
+import { useRouter } from "next/navigation";
+import { useActionState, useEffect } from "react";
 
-export default async function LoginPage() {
-  const [state, formAction] = useFormState(signInWithEmail, {
-    email: "",
-    password: ""
-  })
+const initialState = {
+  message: "",
+  success: false,
+};
+
+export default function LoginPage() {
+  const router = useRouter();
+  const [state, formAction, isPending] = useActionState(
+    signInWithEmail,
+    initialState
+  );
+
+  useEffect(() => {
+    if (state.success) {
+      router.push("/");
+    }
+  }, [state]);
 
   return (
-    <Card className="w-full max-w-sm bg-muted">
+    <Card className="w-full max-w-sm">
       <CardHeader>
         <CardTitle className="text-2xl">Login</CardTitle>
         <CardDescription>
@@ -32,6 +45,11 @@ export default async function LoginPage() {
       </CardHeader>
       <form action={formAction}>
         <CardContent className="grid gap-4">
+          {!state.success && (
+            <p className="text-destructive-foreground p-4 rounded-xl border border-destructive border-dashed font-bold text-sm overflow-hidden w-full">
+              {state.message}
+            </p>
+          )}
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -60,7 +78,7 @@ export default async function LoginPage() {
           </Button>
         </CardFooter>
         <CardFooter>
-          <p className="bg-background p-4 rounded-xl border border-dashed text-muted-foreground font-bold text-sm overflow-hidden w-full">
+          <p className="bg-background p-2 rounded-xl border border-dashed text-muted-foreground font-bold text-sm overflow-hidden w-full text-center">
             Don&apos;t have an account?
             <Button
               variant="link"

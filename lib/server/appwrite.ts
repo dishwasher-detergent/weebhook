@@ -14,7 +14,7 @@ import {
 export async function createSessionClient() {
   const client = new Client().setEndpoint(ENDPOINT).setProject(PROJECT_ID);
 
-  const session = cookies().get(COOKIE_KEY);
+  const session = (await cookies()).get(COOKIE_KEY);
   if (!session || !session.value) {
     throw new Error("No session");
   }

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,13 +14,26 @@ import { Label } from "@/components/ui/label";
 import { signUpWithEmail } from "./action";
 
 import Link from "next/link";
-import { useFormState } from 'react'
+import { useRouter } from "next/navigation";
+import { useActionState, useEffect } from "react";
+
+const initialState = {
+  message: "",
+  success: false,
+};
 
 export default async function SignUpPage() {
-  const [state, formAction] = useFormState(signUpWithEmail, {
-    email: "",
-    password: ""
-  })
+  const router = useRouter();
+  const [state, formAction, isPending] = useActionState(
+    signUpWithEmail,
+    initialState
+  );
+
+  useEffect(() => {
+    if (state.success) {
+      router.push("/");
+    }
+  }, [state]);
 
   return (
     <Card className="w-full max-w-sm bg-muted">
@@ -32,6 +45,11 @@ export default async function SignUpPage() {
       </CardHeader>
       <form action={formAction}>
         <CardContent className="grid gap-4">
+          {!state.success && (
+            <p className="text-destructive-foreground p-4 rounded-xl border border-destructive border-dashed font-bold text-sm overflow-hidden w-full">
+              {state.message}
+            </p>
+          )}
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
