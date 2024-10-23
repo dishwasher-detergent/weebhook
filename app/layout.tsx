@@ -1,7 +1,6 @@
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
-import { getLoggedInUser } from "@/lib/server/appwrite";
 import { Dev } from "@/providers/jotai-devtools";
 import { Karla } from "next/font/google";
 import { redirect } from "next/navigation";
@@ -15,12 +14,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getLoggedInUser();
-
-  if (!user) {
-    redirect("/login");
-  }
-
   return (
     <html lang="en">
       <body
