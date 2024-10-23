@@ -24,10 +24,7 @@ const initialState = {
 
 export default function LoginPage() {
   const router = useRouter();
-  const [state, formAction, isPending] = useActionState(
-    signInWithEmail,
-    initialState
-  );
+  const [state, formAction] = useActionState(signInWithEmail, initialState);
 
   useEffect(() => {
     if (state.success) {
