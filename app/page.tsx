@@ -1,37 +1,28 @@
 "use client";
 
 import { projectId } from "@/atoms/project";
-import { NoRequests } from "@/components/no-requests";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
+import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, PROJECT_COLLECTION_ID } from "@/lib/constants";
 import { createWebhook } from "@/lib/utils";
 
-import { Models } from "appwrite";
 import { useAtom } from "jotai";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Query } from "node-appwrite";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const [projectIdValue, setProjectId] = useAtom(projectId);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [user, setUser] = useState<Models.User<Models.Preferences> | null>(
-    null
-  );
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [hasProjects, setHasProjects] = useState<boolean>(true);
   const router = useRouter();
   const { database } = createClient();
 
   useEffect(() => {
-    async function checkLoginStatusAndProjects() {
-      setIsLoading(true);
-
-      const userData = await getLoggedInUser();
-      setUser(userData);
-
-      if (userData) {
+    async function getProjects() {
+      try {
+        setIsLoading(true);
         const data = await database.listDocuments(
           DATABASE_ID,
           PROJECT_COLLECTION_ID,
@@ -41,19 +32,22 @@ export default function Home() {
         if (data.documents.length > 0) {
           setProjectId(data.documents[0].$id);
         }
+      } finally {
+        setHasProjects(false);
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
     }
 
-    checkLoginStatusAndProjects();
-  }, []);
+    if (!projectIdValue) {
+      getProjects();
+    }
+  }, [projectIdValue]);
 
   useEffect(() => {
-    if (user && projectIdValue) {
+    if (projectIdValue) {
       router.replace(projectIdValue);
     }
-  }, [user, projectIdValue]);
+  }, [projectIdValue]);
 
   async function create() {
     const data = await createWebhook();
@@ -69,23 +63,13 @@ export default function Home() {
       <header className="w-full border-b sticky top-0 bg-background/50 backdrop-blur-sm z-10">
         <div className="max-w-4xl mx-auto p-4 px-8">
           <p className="font-bold text-primary-foreground text-sm">Webhook</p>
-          {isLoading ? (
+          {isLoading && hasProjects ? (
             <Skeleton className="h-9 w-36" />
-          ) : user ? (
-            <Button onClick={create}>Create Webhook</Button>
           ) : (
-            <Button asChild>
-              <Link href="/login">Login To Create A Webhook</Link>
-            </Button>
+            <Button onClick={create}>Create Webhook</Button>
           )}
         </div>
       </header>
-      <main className="max-w-4xl mx-auto space-y-4 p-4 px-8">
-        <h2 className="font-bold text-primary-foreground">Requests Per Hour</h2>
-        <NoRequests />
-        <h2 className="font-bold text-primary-foreground">Requests</h2>
-        <NoRequests />
-      </main>
     </>
   );
 }

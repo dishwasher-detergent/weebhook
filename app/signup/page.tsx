@@ -22,7 +22,7 @@ const initialState = {
   success: false,
 };
 
-export default async function SignUpPage() {
+export default function SignUpPage() {
   const router = useRouter();
   const [state, formAction] = useActionState(signUpWithEmail, initialState);
 
