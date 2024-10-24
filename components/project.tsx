@@ -35,6 +35,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { Share } from "./share";
 
 export function Project() {
   const router = useRouter();
@@ -212,6 +213,7 @@ export function Project() {
               <LucidePlus className="size-3.5" />
             )}
           </Button>
+          <Share />
           <Button
             onClick={deleteWH}
             variant="destructive"

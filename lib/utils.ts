@@ -2,6 +2,7 @@ import { Project } from "@/interfaces/project.interface";
 import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
 import {
   DATABASE_ID,
+  HOSTNAME,
   PROJECT_COLLECTION_ID,
   REQUEST_COLLECTION_ID,
 } from "@/lib/constants";
@@ -20,7 +21,11 @@ export async function createWebhook() {
   const { database, team } = createClient();
   const user = await getLoggedInUser();
   const maxCheckCount = 5;
-  let id = generate({ exactly: 10, wordsPerString: 3, separator: "-" });
+  let id = generate({
+    exactly: 10,
+    wordsPerString: 3,
+    separator: "-",
+  }) as string[];
 
   if (!user) {
     return;
@@ -35,6 +40,7 @@ export async function createWebhook() {
 
   let doesProjectExist = true;
   let checks = 0;
+  let projectId;
 
   do {
     checks++;
@@ -44,10 +50,17 @@ export async function createWebhook() {
       [Query.equal("$id", id)]
     );
 
-    if (checkedProjects.total == 0) {
+    if (checkedProjects.total < 10) {
       doesProjectExist = false;
+      projectId = id.filter(
+        (x) => !checkedProjects.documents.map((y) => y.$id).includes(x)
+      )[0];
     } else {
-      id = generate({ exactly: 10, wordsPerString: 3, separator: "-" });
+      id = generate({
+        exactly: 10,
+        wordsPerString: 3,
+        separator: "-",
+      }) as string[];
     }
   } while (doesProjectExist == true || checks == maxCheckCount);
 
@@ -57,27 +70,37 @@ export async function createWebhook() {
     return;
   }
 
-  const teamData = await team.create(id[0], id[0]);
+  if (!projectId) {
+    toast.error("Could not generate valid project name.");
 
-  const data = await database.createDocument<Project>(
-    DATABASE_ID,
-    PROJECT_COLLECTION_ID,
-    id[0],
-    {
-      shared: false,
-      description: null,
-    },
-    [
-      Permission.read(Role.team(teamData.$id)),
-      Permission.write(Role.team(teamData.$id)),
-      Permission.read(Role.user(user?.$id)),
-      Permission.write(Role.user(user?.$id)),
-    ]
-  );
+    return;
+  }
 
-  toast.success(`${data.$id} has been created!`);
+  try {
+    const teamData = await team.create(projectId, projectId);
 
-  return data;
+    const data = await database.createDocument<Project>(
+      DATABASE_ID,
+      PROJECT_COLLECTION_ID,
+      projectId,
+      {
+        shared: false,
+        description: null,
+      },
+      [
+        Permission.read(Role.team(teamData.$id)),
+        Permission.write(Role.team(teamData.$id)),
+        Permission.read(Role.user(user?.$id)),
+        Permission.write(Role.user(user?.$id)),
+      ]
+    );
+
+    toast.success(`${data.$id} has been created!`);
+    return data;
+  } catch {
+    toast.error(`Failed to create ${projectId}!`);
+    return;
+  }
 }
 
 export async function deleteWebhook(projectId: string) {
@@ -125,4 +148,26 @@ export async function deleteWebhook(projectId: string) {
   }
 
   return null;
+}
+
+export async function shareWebhook(projectId: string, email: string) {
+  const { team } = createClient();
+
+  try {
+    await team.createMembership(
+      projectId,
+      [],
+      email,
+      undefined,
+      undefined,
+      `${location.protocol}//${HOSTNAME}/${projectId}`,
+      undefined
+    );
+  } catch {
+    toast.error(`Failed to invite ${email} to ${projectId}`);
+    return;
+  }
+
+  toast.success(`${email} has been invited to ${projectId}`);
+  return;
 }
