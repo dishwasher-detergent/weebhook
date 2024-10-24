@@ -2,7 +2,7 @@
 
 import { projectId } from "@/atoms/project";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/client/appwrite";
+import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
 import { DATABASE_ID, PROJECT_COLLECTION_ID } from "@/lib/constants";
 import { createWebhook } from "@/lib/utils";
 
@@ -23,6 +23,12 @@ export default function Home() {
   useEffect(() => {
     async function getProjects() {
       setIsLoading(true);
+      const user = await getLoggedInUser();
+
+      if (!user) {
+        router.push("/login");
+      }
+
       const data = await database.listDocuments(
         DATABASE_ID,
         PROJECT_COLLECTION_ID,
