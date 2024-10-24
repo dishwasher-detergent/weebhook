@@ -1,6 +1,7 @@
 "use client";
 
 import { projectId } from "@/atoms/project";
+import { Share } from "@/components/share";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -35,7 +36,6 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { Share } from "./share";
 
 export function Project() {
   const router = useRouter();
