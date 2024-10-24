@@ -89,6 +89,7 @@ export function Project() {
 
     if (projectIdValue) {
       const project = await deleteWebhook(projectIdValue);
+      await fetchProjects();
 
       if (project) {
         setProjectIdValue(project);
