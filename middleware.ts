@@ -16,19 +16,9 @@ export const config = {
 export default async function middleware(req: NextRequest) {
   console.log(req.headers);
 
-  let hostname = req.headers
-    .get("host")!
-    .replace(".localhost:3000", `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
+  let hostname = req.headers.get("host")!;
 
-  // special case for Vercel preview deployment URLs
-  if (
-    hostname.includes("---") &&
-    hostname.endsWith(`.${process.env.NEXT_PUBLIC_VERCEL_DEPLOYMENT_SUFFIX}`)
-  ) {
-    hostname = `${hostname.split("---")[0]}.${
-      process.env.NEXT_PUBLIC_ROOT_DOMAIN
-    }`;
-  }
+  console.log(hostname);
 
   if (
     hostname === "localhost:3000" ||
@@ -36,6 +26,8 @@ export default async function middleware(req: NextRequest) {
     hostname === `www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}` ||
     hostname.endsWith("vercel.app")
   ) {
+    console.log("test");
+
     return NextResponse.rewrite(req.url);
   }
 
