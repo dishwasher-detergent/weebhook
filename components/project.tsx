@@ -16,6 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Project as ProjectItem } from "@/interfaces/project.interface";
 import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, HOSTNAME, PROJECT_COLLECTION_ID } from "@/lib/constants";
@@ -34,7 +35,6 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { Skeleton } from "./ui/skeleton";
 
 export function Project() {
   const router = useRouter();
@@ -145,7 +145,7 @@ export function Project() {
                 className="justify-between text-muted-foreground font-normal truncate"
               >
                 <span className="truncate">
-                  {location.protocol}//
+                  {location.protocol}\/\/
                   <span className="font-bold text-foreground">
                     {projectIdValue ?? "loading"}
                   </span>
