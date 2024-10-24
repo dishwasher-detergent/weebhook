@@ -176,6 +176,18 @@ export function Project() {
               </Command>
             </PopoverContent>
           </Popover>
+          <CopyToClipboard
+            text={`${location.protocol}//${projectIdValue}.${HOSTNAME}`}
+            onCopy={onCopy}
+          >
+            <Button variant="outline" size="icon" className="flex-none size-8">
+              {!copy ? (
+                <LucideCopy className="size-3.5" />
+              ) : (
+                <LucideCopyCheck className="size-3.5 text-green-400" />
+              )}
+            </Button>
+          </CopyToClipboard>
           <Button
             onClick={create}
             variant="outline"
@@ -190,7 +202,7 @@ export function Project() {
           </Button>
           <Button
             onClick={deleteWH}
-            variant="outline"
+            variant="destructive"
             size="icon"
             className="flex-none size-8"
           >
@@ -200,18 +212,6 @@ export function Project() {
               <LucideTrash className="size-3.5" />
             )}
           </Button>
-          <CopyToClipboard
-            text={`https://${projectIdValue}.${HOSTNAME}`}
-            onCopy={onCopy}
-          >
-            <Button variant="outline" size="icon" className="flex-none size-8">
-              {!copy ? (
-                <LucideCopy className="size-3.5" />
-              ) : (
-                <LucideCopyCheck className="size-3.5 text-green-400" />
-              )}
-            </Button>
-          </CopyToClipboard>
         </div>
       )}
     </div>
