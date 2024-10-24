@@ -49,6 +49,8 @@ export async function createWebhook() {
     ]
   );
 
+  toast.success(`${data.$id} has been created!`);
+
   return data;
 }
 
@@ -89,6 +91,8 @@ export async function deleteWebhook(projectId: string) {
     PROJECT_COLLECTION_ID,
     [Query.orderDesc("$createdAt"), Query.limit(1)]
   );
+
+  toast.error(`${projectId} has been deleted!`);
 
   if (data.documents.length > 0) {
     return data.documents[0].$id;
