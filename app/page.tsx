@@ -16,11 +16,13 @@ export default function Home() {
   const [projectIdValue, setProjectIdValue] = useAtom(projectId);
   const [isLoadingCreateWebhook, setIsLoadingCreateWebhook] =
     useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { database } = createClient();
   const router = useRouter();
 
   useEffect(() => {
     async function getProjects() {
+      setIsLoading(true);
       const data = await database.listDocuments(
         DATABASE_ID,
         PROJECT_COLLECTION_ID,
@@ -31,6 +33,8 @@ export default function Home() {
         setProjectIdValue(data.documents[0].$id);
         router.replace(data.documents[0].$id);
       }
+
+      setIsLoading(false);
     }
 
     if (!projectIdValue) {
@@ -54,19 +58,27 @@ export default function Home() {
 
   return (
     <main className="grid place-items-center w-full min-h-dvh">
-      <Button onClick={create}>
-        {isLoadingCreateWebhook ? (
-          <>
-            <LucideLoader2 className="animate-spin size-4 mr-2" />
-            Creating Webhook
-          </>
-        ) : (
-          <>
-            <LucidePlus className="size-4 mr-2" />
-            Create Webhook
-          </>
-        )}
-      </Button>
+      {isLoading && (
+        <p className="flex flex-row gap-2 items-center">
+          <LucideLoader2 className="animate-spin size-4" />
+          Checking for existing webhooks
+        </p>
+      )}
+      {!isLoading && (
+        <Button onClick={create}>
+          {isLoadingCreateWebhook ? (
+            <>
+              <LucideLoader2 className="animate-spin size-4 mr-2" />
+              Creating Webhook
+            </>
+          ) : (
+            <>
+              <LucidePlus className="size-4 mr-2" />
+              Create Webhook
+            </>
+          )}
+        </Button>
+      )}
     </main>
   );
 }

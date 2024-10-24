@@ -105,7 +105,7 @@ export function Project() {
                 className="justify-between text-muted-foreground font-normal truncate"
               >
                 <span className="truncate">
-                  https://
+                  {location.protocol}//
                   <span className="font-bold text-foreground">
                     {projectIdValue ?? "loading"}
                   </span>
