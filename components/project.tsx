@@ -117,6 +117,21 @@ export function Project() {
   return (
     <div>
       <p className="font-bold text-primary-foreground text-sm mb-1">Endpoint</p>
+      {projects.length == 0 && !isLoading ? (
+        <Button onClick={create} size="sm">
+          {isLoadingCreateWebhook ? (
+            <>
+              <LucideLoader2 className="animate-spin size-4 mr-2" />
+              Creating Webhook
+            </>
+          ) : (
+            <>
+              <LucidePlus className="size-4 mr-2" />
+              Create Webhook
+            </>
+          )}
+        </Button>
+      ) : null}
       {isLoading && <Skeleton className="h-8" />}
       {projects.length > 0 && !isLoading && (
         <div className="flex flex-row gap-1 items-center">

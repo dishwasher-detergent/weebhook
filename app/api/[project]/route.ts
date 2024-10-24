@@ -54,7 +54,11 @@ export async function POST(
         headers: JSON.stringify(headers),
         body: JSON.stringify(res),
       },
-      [Permission.read(Role.team(projectId)), Permission.read(Role.any())]
+      [
+        Permission.read(Role.team(projectId)),
+        Permission.read(Role.any()),
+        Permission.write(Role.team(projectId)),
+      ]
     );
 
     return Response.json(data);

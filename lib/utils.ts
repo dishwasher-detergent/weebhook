@@ -87,9 +87,6 @@ export async function deleteWebhook(projectId: string) {
     return;
   }
 
-  await team.delete(projectId);
-  await database.deleteDocument(DATABASE_ID, PROJECT_COLLECTION_ID, projectId);
-
   let response;
   const queries = [Query.limit(50), Query.equal("projectId", projectId)];
 
@@ -110,6 +107,9 @@ export async function deleteWebhook(projectId: string) {
       )
     );
   } while (response.documents.length > 0);
+
+  await team.delete(projectId);
+  await database.deleteDocument(DATABASE_ID, PROJECT_COLLECTION_ID, projectId);
 
   const data = await database.listDocuments(
     DATABASE_ID,
