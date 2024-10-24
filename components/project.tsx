@@ -75,7 +75,7 @@ export function Project() {
     if (data) {
       setProjects((prev) => [...prev, data]);
       setProjectIdValue(data.$id);
-      router.replace(data.$id);
+      router.push(data.$id);
     }
 
     setIsLoadingCreateWebhook(false);
@@ -133,7 +133,7 @@ export function Project() {
                         onSelect={(currentValue) => {
                           setProjectIdValue(currentValue);
                           setOpen(false);
-                          router.replace(project.$id);
+                          router.push(project.$id);
                         }}
                         className="cursor-pointer text-xs"
                       >

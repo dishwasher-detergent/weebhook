@@ -4,39 +4,22 @@ import { projectId } from "@/atoms/project";
 import { NoRequests } from "@/components/no-requests";
 import { Request } from "@/components/request";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Project } from "@/interfaces/project.interface";
 import { Request as RequestItem } from "@/interfaces/request.interface";
 import { createClient } from "@/lib/client/appwrite";
-import { DATABASE_ID, REQUEST_COLLECTION_ID } from "@/lib/constants";
+import {
+  DATABASE_ID,
+  PROJECT_COLLECTION_ID,
+  REQUEST_COLLECTION_ID,
+} from "@/lib/constants";
 
 import { useAtom } from "jotai";
 import { usePathname, useRouter } from "next/navigation";
 import { Query } from "node-appwrite";
 import { useEffect, useState } from "react";
 
-export interface RequestsPerHour {
-  hour: string;
-  requests: number;
-}
-
-const countRequestsPerHour = (items: RequestItem[]): RequestsPerHour[] => {
-  const counts: { [hour: string]: number } = {};
-
-  items.forEach((item) => {
-    const date = new Date(item.$createdAt);
-    const hourKey = date.getHours();
-
-    counts[hourKey] = (counts[hourKey] || 0) + 1;
-  });
-
-  return Object.keys(counts).map((hour) => ({
-    hour: hour,
-    requests: counts[hour],
-  }));
-};
-
 export default function ProjectPage() {
   const [projectIdValue, setProjectId] = useAtom(projectId);
-  const [chartData, setChartData] = useState<RequestsPerHour[]>([]);
   const [requests, setRequests] = useState<RequestItem[]>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
   const { database, client } = createClient();
@@ -57,21 +40,15 @@ export default function ProjectPage() {
       setLoading(false);
     }
 
-    if (projectIdValue) {
+    if (projectIdValue && requests.length == 0) {
       fetchRequests(projectIdValue);
     }
   }, [projectIdValue]);
 
   useEffect(() => {
-    setChartData(countRequestsPerHour(requests));
-  }, [requests]);
-
-  useEffect(() => {
     const unsubscribe = client.subscribe(
       `databases.${DATABASE_ID}.collections.${REQUEST_COLLECTION_ID}.documents`,
       (response) => {
-        console.log(response);
-
         const req = response.payload as RequestItem;
         if (req.projectId == projectIdValue) {
           if (
@@ -97,21 +74,29 @@ export default function ProjectPage() {
   }, [projectIdValue]);
 
   useEffect(() => {
-    if (projectIdValue) {
-      router.push(projectIdValue);
-    }
-  }, [projectIdValue]);
+    async function validateProject() {
+      try {
+        await database.getDocument<Project>(
+          DATABASE_ID,
+          PROJECT_COLLECTION_ID,
+          pathname.slice(1)
+        );
 
-  useEffect(() => {
-    if (pathname) {
-      setProjectId(pathname.slice(1));
+        setProjectId(pathname.slice(1));
+      } catch {
+        router.push("not-found");
+      }
+    }
+
+    if (pathname != projectIdValue) {
+      validateProject();
     }
   }, [pathname]);
 
   return (
     <>
       <main className="max-w-4xl mx-auto p-4 px-8">
-        <h2 className="font-bold text-primary-foreground mb-1">Requests</h2>
+        <h2 className="font-bold text-primary-foreground mb-2">Requests</h2>
         <div className="flex flex-col gap-4">
           {!isLoading ? (
             <>
