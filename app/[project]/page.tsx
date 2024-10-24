@@ -2,7 +2,6 @@
 
 import { projectId } from "@/atoms/project";
 import { NoRequests } from "@/components/no-requests";
-import { Project } from "@/components/project";
 import { Request } from "@/components/request";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Request as RequestItem } from "@/interfaces/request.interface";
@@ -71,21 +70,35 @@ export default function ProjectPage() {
     const unsubscribe = client.subscribe(
       `databases.${DATABASE_ID}.collections.${REQUEST_COLLECTION_ID}.documents`,
       (response) => {
+        console.log(response);
+
         const req = response.payload as RequestItem;
         if (req.projectId == projectIdValue) {
-          setRequests([req, ...requests]);
+          if (
+            response.events.includes(
+              "databases.*.collections.*.documents.*.create"
+            )
+          ) {
+            setRequests((prev) => [req, ...prev]);
+          }
+
+          if (
+            response.events.includes(
+              "databases.*.collections.*.documents.*.delete"
+            )
+          ) {
+            setRequests((prev) => prev.filter((x) => x.$id !== req.$id));
+          }
         }
       }
     );
 
-    return () => {
-      unsubscribe();
-    };
-  }, [projectIdValue, requests]);
+    return unsubscribe;
+  }, [projectIdValue]);
 
   useEffect(() => {
     if (projectIdValue) {
-      router.replace(projectIdValue);
+      router.push(projectIdValue);
     }
   }, [projectIdValue]);
 
@@ -97,28 +110,25 @@ export default function ProjectPage() {
 
   return (
     <>
-      <header className="w-full border-b sticky top-0 bg-background/50 backdrop-blur-sm z-10">
-        <div className="max-w-4xl mx-auto p-4 px-8">
-          <Project />
+      <main className="max-w-4xl mx-auto p-4 px-8">
+        <h2 className="font-bold text-primary-foreground mb-1">Requests</h2>
+        <div className="space-y-2">
+          {!isLoading ? (
+            <>
+              {requests.map((item) => (
+                <Request
+                  key={item.$id}
+                  timestamp={item.$createdAt}
+                  body={item.body}
+                  headers={item.headers}
+                />
+              ))}
+              {requests.length === 0 && <NoRequests />}
+            </>
+          ) : (
+            <Skeleton className="w-full h-48" />
+          )}
         </div>
-      </header>
-      <main className="max-w-4xl mx-auto space-y-4 p-4 px-8">
-        <h2 className="font-bold text-primary-foreground">Requests</h2>
-        {!isLoading ? (
-          <>
-            {requests.map((item) => (
-              <Request
-                key={item.$id}
-                timestamp={item.$createdAt}
-                body={item.body}
-                headers={item.headers}
-              />
-            ))}
-            {requests.length === 0 && <NoRequests />}
-          </>
-        ) : (
-          <Skeleton className="w-full h-48" />
-        )}
       </main>
     </>
   );

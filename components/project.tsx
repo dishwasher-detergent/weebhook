@@ -27,11 +27,13 @@ import {
   ChevronsUpDown,
   LucideCopy,
   LucideCopyCheck,
+  LucideLoader2,
   LucidePlus,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { Skeleton } from "./ui/skeleton";
 
 export function Project() {
   const router = useRouter();
@@ -39,10 +41,14 @@ export function Project() {
   const [projectIdValue, setProjectIdValue] = useAtom(projectId);
   const [open, setOpen] = useState(false);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const [isLoadingCreateWebhook, setIsLoadingCreateWebhook] =
+    useState<boolean>(false);
   const [copy, setCopy] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchProjects() {
+      setLoading(true);
       const { database } = createClient();
 
       const data = await database.listDocuments<ProjectItem>(
@@ -50,7 +56,11 @@ export function Project() {
         PROJECT_COLLECTION_ID
       );
 
-      setProjects(data.documents);
+      if (data.documents.length > 0) {
+        setProjects(data.documents);
+      }
+
+      setLoading(false);
     }
 
     if (projects.length == 0) {
@@ -59,13 +69,16 @@ export function Project() {
   }, [projects]);
 
   async function create() {
+    setIsLoadingCreateWebhook(true);
     const data = await createWebhook();
 
     if (data) {
-      setProjects([...projects, data]);
+      setProjects((prev) => [...prev, data]);
       setProjectIdValue(data.$id);
       router.replace(data.$id);
     }
+
+    setIsLoadingCreateWebhook(false);
   }
 
   function onCopy() {
@@ -78,76 +91,95 @@ export function Project() {
 
   return (
     <div>
-      <p className="font-bold text-primary-foreground text-sm mb-1">Webhook</p>
-      <div className="flex flex-row gap-1 items-center">
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={open}
-              className="justify-between"
-            >
-              http://
-              <span className="font-bold">{projectIdValue ?? "loading"}</span>.
-              {HOSTNAME}
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="p-0" align="start">
-            <Command>
-              <CommandInput placeholder="Search project..." />
-              <CommandList>
-                <CommandEmpty>No project found.</CommandEmpty>
-                <CommandGroup>
-                  {projects.map((project) => (
-                    <CommandItem
-                      key={project.$id}
-                      value={project.$id}
-                      onSelect={(currentValue) => {
-                        setProjectIdValue(currentValue);
-                        setOpen(false);
-                        router.replace(project.$id);
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          projectIdValue === project.$id
-                            ? "opacity-100"
-                            : "opacity-0"
-                        )}
-                      />
-                      {project.$id}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-              <CommandSeparator />
+      <p className="font-bold text-primary-foreground text-sm mb-1">Endpoint</p>
+      {isLoading && <Skeleton className="h-10" />}
+      {projects.length == 0 && !isLoading ? (
+        <Button onClick={create}>Create Endpoint</Button>
+      ) : null}
+      {projects.length > 0 && (
+        <div className="flex flex-row gap-1 items-center">
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
               <Button
-                variant="ghost"
-                className="justify-start rounded-none"
-                onClick={create}
+                size="sm"
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="justify-between text-muted-foreground font-normal truncate"
               >
-                <LucidePlus className="size-3 mr-2" />
-                Create Webhook
+                <span className="truncate">
+                  https://
+                  <span className="font-bold text-foreground">
+                    {projectIdValue ?? "loading"}
+                  </span>
+                  .{HOSTNAME}
+                </span>
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
-            </Command>
-          </PopoverContent>
-        </Popover>
-        <CopyToClipboard
-          text={`http://${projectIdValue}.${HOSTNAME}`}
-          onCopy={onCopy}
-        >
-          <Button variant="outline" size="icon">
-            {!copy ? (
-              <LucideCopy className="size-3" />
+            </PopoverTrigger>
+            <PopoverContent className="p-0" align="start">
+              <Command>
+                <CommandInput
+                  className="text-xs h-8"
+                  placeholder="Search project..."
+                />
+                <CommandList>
+                  <CommandEmpty>No project found.</CommandEmpty>
+                  <CommandGroup>
+                    {projects.map((project) => (
+                      <CommandItem
+                        key={project.$id}
+                        value={project.$id}
+                        onSelect={(currentValue) => {
+                          setProjectIdValue(currentValue);
+                          setOpen(false);
+                          router.replace(project.$id);
+                        }}
+                        className="cursor-pointer text-xs"
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            projectIdValue === project.$id
+                              ? "opacity-100"
+                              : "opacity-0"
+                          )}
+                        />
+                        {project.$id}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+                <CommandSeparator />
+              </Command>
+            </PopoverContent>
+          </Popover>
+          <Button
+            onClick={create}
+            variant="outline"
+            size="icon"
+            className="flex-none size-8"
+          >
+            {isLoadingCreateWebhook ? (
+              <LucideLoader2 className="animate-spin size-3.5" />
             ) : (
-              <LucideCopyCheck className="size-3 text-green-400" />
+              <LucidePlus className="size-3.5" />
             )}
           </Button>
-        </CopyToClipboard>
-      </div>
+          <CopyToClipboard
+            text={`https://${projectIdValue}.${HOSTNAME}`}
+            onCopy={onCopy}
+          >
+            <Button variant="outline" size="icon" className="flex-none size-8">
+              {!copy ? (
+                <LucideCopy className="size-3.5" />
+              ) : (
+                <LucideCopyCheck className="size-3.5 text-green-400" />
+              )}
+            </Button>
+          </CopyToClipboard>
+        </div>
+      )}
     </div>
   );
 }
