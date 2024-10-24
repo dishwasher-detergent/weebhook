@@ -17,6 +17,8 @@ export async function POST(
   const headers: Record<string, string> = {};
 
   request.headers.forEach((value, key) => {
+    if (headers[key].includes("vercel")) return;
+
     headers[key] = value;
   });
 
