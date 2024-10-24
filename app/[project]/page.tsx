@@ -43,7 +43,7 @@ export default function ProjectPage() {
     if (projectIdValue && requests.length == 0) {
       fetchRequests(projectIdValue);
     }
-  }, [projectIdValue]);
+  }, []);
 
   useEffect(() => {
     const unsubscribe = client.subscribe(
@@ -71,7 +71,7 @@ export default function ProjectPage() {
     );
 
     return unsubscribe;
-  }, [projectIdValue]);
+  }, []);
 
   useEffect(() => {
     async function validateProject() {
@@ -91,7 +91,7 @@ export default function ProjectPage() {
     if (pathname != projectIdValue) {
       validateProject();
     }
-  }, [pathname]);
+  }, []);
 
   return (
     <>
