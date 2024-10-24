@@ -71,10 +71,6 @@ export function Project() {
     }
   }, [projects]);
 
-  useEffect(() => {
-    fetchProjects();
-  }, [projectIdValue]);
-
   async function create() {
     setIsLoadingCreateWebhook(true);
     const data = await createWebhook();
