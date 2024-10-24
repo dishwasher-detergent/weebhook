@@ -96,7 +96,7 @@ export default function ProjectPage() {
 
   return (
     <>
-      <main className="max-w-4xl mx-auto p-4 px-8">
+      <main className="max-w-4xl mx-auto p-4 px-4 md:px-8">
         <h2 className="font-bold text-foreground mb-2">Requests</h2>
         <div className="flex flex-col gap-4">
           {!isLoading ? (

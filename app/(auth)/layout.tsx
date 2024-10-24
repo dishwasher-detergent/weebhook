@@ -13,5 +13,9 @@ export default async function Layout({
     redirect("/");
   }
 
-  return <>{children}</>;
+  return (
+    <main className="grid place-items-center w-full min-h-dvh p-4">
+      {children}
+    </main>
+  );
 }
