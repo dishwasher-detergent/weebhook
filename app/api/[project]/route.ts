@@ -59,7 +59,6 @@ export async function POST(
       },
       [
         Permission.read(Role.team(projectId)),
-        Permission.read(Role.any()),
         Permission.write(Role.team(projectId)),
       ]
     );

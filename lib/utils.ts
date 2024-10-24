@@ -69,6 +69,7 @@ export async function createWebhook() {
     },
     [
       Permission.read(Role.team(teamData.$id)),
+      Permission.write(Role.team(teamData.$id)),
       Permission.read(Role.user(user?.$id)),
       Permission.write(Role.user(user?.$id)),
     ]
