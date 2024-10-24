@@ -19,7 +19,8 @@ export function cn(...inputs: ClassValue[]) {
 export async function createWebhook() {
   const { database, team } = createClient();
   const user = await getLoggedInUser();
-  const id = generate({ exactly: 1, wordsPerString: 3, separator: "-" });
+  const maxCheckCount = 5;
+  let id = generate({ exactly: 10, wordsPerString: 3, separator: "-" });
 
   if (!user) {
     return;
@@ -30,6 +31,30 @@ export async function createWebhook() {
   if (joinedTeams.total >= 2) {
     toast.error("You've reached the maximum webhook limit.");
     return null;
+  }
+
+  let doesProjectExist = true;
+  let checks = 0;
+
+  do {
+    checks++;
+    const checkedProjects = await database.listDocuments(
+      DATABASE_ID,
+      PROJECT_COLLECTION_ID,
+      [Query.equal("$id", id)]
+    );
+
+    if (checkedProjects.total == 0) {
+      doesProjectExist = false;
+    } else {
+      id = generate({ exactly: 10, wordsPerString: 3, separator: "-" });
+    }
+  } while (doesProjectExist == true || checks == maxCheckCount);
+
+  if (checks == maxCheckCount) {
+    toast.error("Could not find valid project name.");
+
+    return;
   }
 
   const teamData = await team.create(id[0], id[0]);
