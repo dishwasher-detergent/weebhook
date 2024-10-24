@@ -116,7 +116,7 @@ export function Project() {
 
   return (
     <div>
-      <p className="font-bold text-primary-foreground text-sm mb-1">Endpoint</p>
+      <p className="font-bold text-foreground text-sm mb-1">Endpoint</p>
       {projects.length == 0 && !isLoading ? (
         <Button onClick={create} size="sm">
           {isLoadingCreateWebhook ? (

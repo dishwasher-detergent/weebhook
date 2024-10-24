@@ -36,7 +36,7 @@ export function Request({ timestamp, headers, body }: RequestProps) {
           </div>
         </header>
         <div className="mb-4">
-          <h4 className="font-semibold text-primary-foreground text-sm mb-2 ml-2">
+          <h4 className="font-semibold text-foreground text-sm mb-2 ml-2">
             Headers
           </h4>
           <div className="rounded-xl border border-dashed overflow-x-auto bg-background">
@@ -60,7 +60,7 @@ export function Request({ timestamp, headers, body }: RequestProps) {
           </div>
         </div>
         <div>
-          <h4 className="font-semibold text-primary-foreground text-sm mb-2 ml-2">
+          <h4 className="font-semibold text-foreground text-sm mb-2 ml-2">
             Body
           </h4>
           <div className="p-4 rounded-xl border border-dashed bg-background code">
