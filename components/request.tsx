@@ -57,7 +57,7 @@ export function Request({ timestamp, headers, body }: RequestProps) {
               </Table>
             )}
             {(headerObj == null || Object.keys(headerObj).length === 0) && (
-              <p className="p-4 text-muted-foreground font-bold text-sm">
+              <p className="p-4 text-muted-foreground font-bold text-xs">
                 No header values found.
               </p>
             )}
@@ -77,7 +77,7 @@ export function Request({ timestamp, headers, body }: RequestProps) {
                 {JSON.stringify(JSON.parse(body), null, 2)}
               </SyntaxHighlighter>
             ) : (
-              <p className="text-muted-foreground font-bold text-sm">
+              <p className="text-muted-foreground font-bold text-xs">
                 No body data found.
               </p>
             )}
