@@ -75,12 +75,12 @@ export default function LoginPage() {
           </Button>
         </CardFooter>
         <CardFooter>
-          <p className="bg-background p-2 rounded-xl border border-dashed text-muted-foreground font-bold text-sm overflow-hidden w-full text-center">
+          <p className="bg-background p-2 rounded-xl border border-dashed text-muted-foreground font-bold text-sm overflow-hidden w-full text-center text-xs">
             Don&apos;t have an account?
             <Button
               variant="link"
               asChild
-              className="text-muted-foreground font-bold p-1"
+              className="text-muted-foreground font-bold p-1 text-xs"
             >
               <Link href="/signup">Create one here</Link>
             </Button>

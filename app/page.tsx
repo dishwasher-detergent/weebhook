@@ -1,16 +1,21 @@
 "use client";
 
 import { projectId } from "@/atoms/project";
+import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, PROJECT_COLLECTION_ID } from "@/lib/constants";
+import { createWebhook } from "@/lib/utils";
 
 import { useAtom } from "jotai";
+import { LucideLoader2, LucidePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Query } from "node-appwrite";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [projectIdValue, setProjectId] = useAtom(projectId);
+  const [projectIdValue, setProjectIdValue] = useAtom(projectId);
+  const [isLoadingCreateWebhook, setIsLoadingCreateWebhook] =
+    useState<boolean>(false);
   const { database } = createClient();
   const router = useRouter();
 
@@ -23,7 +28,7 @@ export default function Home() {
       );
 
       if (data.documents.length > 0) {
-        setProjectId(data.documents[0].$id);
+        setProjectIdValue(data.documents[0].$id);
         router.replace(data.documents[0].$id);
       }
     }
@@ -35,5 +40,33 @@ export default function Home() {
     }
   }, [projectIdValue]);
 
-  return <></>;
+  async function create() {
+    setIsLoadingCreateWebhook(true);
+    const data = await createWebhook();
+
+    if (data) {
+      setProjectIdValue(data.$id);
+      router.push(data.$id);
+    }
+
+    setIsLoadingCreateWebhook(false);
+  }
+
+  return (
+    <main className="grid place-items-center w-full min-h-dvh">
+      <Button onClick={create}>
+        {isLoadingCreateWebhook ? (
+          <>
+            <LucideLoader2 className="animate-spin size-4 mr-2" />
+            Creating Webhook
+          </>
+        ) : (
+          <>
+            <LucidePlus className="size-4 mr-2" />
+            Create Webhook
+          </>
+        )}
+      </Button>
+    </main>
+  );
 }

@@ -1,3 +1,4 @@
+import { Nav } from "@/components/nav";
 import { getLoggedInUser } from "@/lib/server/appwrite";
 
 import { redirect } from "next/navigation";
@@ -13,5 +14,10 @@ export default async function Layout({
     redirect("/login");
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <Nav />
+      {children}
+    </>
+  );
 }

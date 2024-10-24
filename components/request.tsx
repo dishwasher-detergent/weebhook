@@ -23,11 +23,13 @@ export function Request({ timestamp, headers, body }: RequestProps) {
         animate={{ opacity: 1, height: "auto" }}
         exit={{ opacity: 0, height: 0 }}
         transition={{ duration: 0.25 }}
-        className="p-2 rounded-xl border border-dashed bg-muted/25"
+        className="p-2 rounded-xl border border-dashed bg-muted/25 shadow-xl shadow-amber-500/5"
       >
-        <header className="flex flex-row gap-2 items-center justify-between cursor-pointer mb-4">
+        <header className="flex flex-row gap-2 items-center justify-between mb-4">
           <div className="flex flex-row gap-2 items-center">
-            <Badge variant="default">POST</Badge>
+            <Badge variant="post" className="uppercase">
+              POST
+            </Badge>
             <p className="text-muted-foreground text-xs font-semibold">
               {timestamp}
             </p>

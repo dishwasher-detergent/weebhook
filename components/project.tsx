@@ -93,9 +93,6 @@ export function Project() {
     <div>
       <p className="font-bold text-primary-foreground text-sm mb-1">Endpoint</p>
       {isLoading && <Skeleton className="h-8" />}
-      {projects.length == 0 && !isLoading ? (
-        <Button onClick={create}>Create Endpoint</Button>
-      ) : null}
       {projects.length > 0 && (
         <div className="flex flex-row gap-1 items-center">
           <Popover open={open} onOpenChange={setOpen}>
