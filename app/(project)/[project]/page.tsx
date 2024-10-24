@@ -22,7 +22,7 @@ export default function ProjectPage() {
   const [projectIdValue, setProjectId] = useAtom(projectId);
   const [requests, setRequests] = useState<RequestItem[]>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
-  const { database, client } = createClient();
+  const { database } = createClient();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -46,17 +46,18 @@ export default function ProjectPage() {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = client.subscribe(
+    const { client } = createClient();
+
+    const unsubscribe = client.subscribe<RequestItem>(
       `databases.${DATABASE_ID}.collections.${REQUEST_COLLECTION_ID}.documents`,
       (response) => {
-        const req = response.payload as RequestItem;
-        if (req.projectId == projectIdValue) {
+        if (response.payload.projectId == projectIdValue) {
           if (
             response.events.includes(
               "databases.*.collections.*.documents.*.create"
             )
           ) {
-            setRequests((prev) => [req, ...prev]);
+            setRequests((prev) => [response.payload, ...prev]);
           }
 
           if (
@@ -64,11 +65,15 @@ export default function ProjectPage() {
               "databases.*.collections.*.documents.*.delete"
             )
           ) {
-            setRequests((prev) => prev.filter((x) => x.$id !== req.$id));
+            setRequests((prev) =>
+              prev.filter((x) => x.$id !== response.payload.$id)
+            );
           }
         }
       }
     );
+
+    console.log(client);
 
     return unsubscribe;
   }, []);

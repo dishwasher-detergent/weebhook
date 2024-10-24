@@ -12,6 +12,14 @@ export function createClient() {
 
   if (cookie) {
     client.setSession(cookie);
+
+    const localStorageCookie: any = {};
+    localStorageCookie[COOKIE_KEY] = cookie;
+
+    window.localStorage.setItem(
+      "cookieFallback",
+      JSON.stringify(localStorageCookie)
+    );
   }
 
   return {
@@ -27,9 +35,7 @@ export function createClient() {
     get team() {
       return new Teams(client);
     },
-    get client() {
-      return client;
-    },
+    client,
   };
 }
 
