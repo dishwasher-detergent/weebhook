@@ -14,7 +14,9 @@ export interface RequestProps {
 }
 
 export function Request({ timestamp, headers, body }: RequestProps) {
-  const headerObj: Record<string, string> = JSON.parse(headers);
+  const headerObj: Record<string, string> | null = headers
+    ? JSON.parse(headers)
+    : null;
 
   return (
     <AnimatePresence>
@@ -40,7 +42,7 @@ export function Request({ timestamp, headers, body }: RequestProps) {
             Headers
           </h4>
           <div className="rounded-xl border border-dashed overflow-x-auto bg-background">
-            {Object.keys(headerObj).length > 0 && (
+            {headerObj && Object.keys(headerObj).length > 0 && (
               <Table>
                 <TableBody>
                   {Object.entries(headerObj).map(([key, value]) => (
@@ -54,10 +56,10 @@ export function Request({ timestamp, headers, body }: RequestProps) {
                 </TableBody>
               </Table>
             )}
-            {Object.keys(headerObj).length === 0 && (
-              <div className="p-4 text-muted-foreground font-bold text-sm">
+            {(headerObj == null || Object.keys(headerObj).length === 0) && (
+              <p className="p-4 text-muted-foreground font-bold text-sm">
                 No header values found.
-              </div>
+              </p>
             )}
           </div>
         </div>
@@ -66,9 +68,19 @@ export function Request({ timestamp, headers, body }: RequestProps) {
             Body
           </h4>
           <div className="p-4 rounded-xl border border-dashed bg-background code">
-            <SyntaxHighlighter language="js" style={coy} showLineNumbers={true}>
-              {JSON.stringify(JSON.parse(body), null, 2)}
-            </SyntaxHighlighter>
+            {body ? (
+              <SyntaxHighlighter
+                language="js"
+                style={coy}
+                showLineNumbers={true}
+              >
+                {JSON.stringify(JSON.parse(body), null, 2)}
+              </SyntaxHighlighter>
+            ) : (
+              <p className="text-muted-foreground font-bold text-sm">
+                No body data found.
+              </p>
+            )}
           </div>
         </div>
       </motion.div>
