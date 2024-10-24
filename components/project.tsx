@@ -132,7 +132,7 @@ export function Project() {
       ) : null}
       {isLoading && <Skeleton className="h-8" />}
       {projects.length > 0 && !isLoading && (
-        <div className="flex flex-row gap-1 items-center">
+        <div className="flex flex-col md:flex-row gap-1 ,md:items-center">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
@@ -140,7 +140,7 @@ export function Project() {
                 variant="outline"
                 role="combobox"
                 aria-expanded={open}
-                className="justify-between text-muted-foreground font-normal truncate"
+                className="justify-between text-muted-foreground font-normal truncate w-full md:w-auto"
               >
                 <span className="truncate">
                   {location.protocol}&#47;&#47;
@@ -189,43 +189,49 @@ export function Project() {
               </Command>
             </PopoverContent>
           </Popover>
-          <CopyToClipboard
-            text={`${location.protocol}//${projectIdValue}.${HOSTNAME}`}
-            onCopy={onCopy}
-          >
-            <Button variant="outline" size="icon" className="flex-none size-8">
-              {!copy ? (
-                <LucideCopy className="size-3.5" />
+          <div className="flex flex-row gap-1">
+            <CopyToClipboard
+              text={`${location.protocol}//${projectIdValue}.${HOSTNAME}`}
+              onCopy={onCopy}
+            >
+              <Button
+                variant="outline"
+                size="icon"
+                className="flex-none size-8"
+              >
+                {!copy ? (
+                  <LucideCopy className="size-3.5" />
+                ) : (
+                  <LucideCopyCheck className="size-3.5 text-green-400" />
+                )}
+              </Button>
+            </CopyToClipboard>
+            <Button
+              onClick={create}
+              variant="outline"
+              size="icon"
+              className="flex-none size-8"
+            >
+              {isLoadingCreateWebhook ? (
+                <LucideLoader2 className="animate-spin size-3.5" />
               ) : (
-                <LucideCopyCheck className="size-3.5 text-green-400" />
+                <LucidePlus className="size-3.5" />
               )}
             </Button>
-          </CopyToClipboard>
-          <Button
-            onClick={create}
-            variant="outline"
-            size="icon"
-            className="flex-none size-8"
-          >
-            {isLoadingCreateWebhook ? (
-              <LucideLoader2 className="animate-spin size-3.5" />
-            ) : (
-              <LucidePlus className="size-3.5" />
-            )}
-          </Button>
-          <Share />
-          <Button
-            onClick={deleteWH}
-            variant="destructive"
-            size="icon"
-            className="flex-none size-8"
-          >
-            {isLoadingDeleteWebhook ? (
-              <LucideLoader2 className="animate-spin size-3.5" />
-            ) : (
-              <LucideTrash className="size-3.5" />
-            )}
-          </Button>
+            <Share />
+            <Button
+              onClick={deleteWH}
+              variant="destructive"
+              size="icon"
+              className="flex-none size-8"
+            >
+              {isLoadingDeleteWebhook ? (
+                <LucideLoader2 className="animate-spin size-3.5" />
+              ) : (
+                <LucideTrash className="size-3.5" />
+              )}
+            </Button>
+          </div>
         </div>
       )}
     </div>
