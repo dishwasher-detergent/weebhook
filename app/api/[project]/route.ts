@@ -14,12 +14,20 @@ export async function POST(
   const params = await props.params;
   const { database } = await createAdminClient();
   const projectId = params.project;
-  const res = await request.json();
   const headers: Record<string, string> = {};
 
   request.headers.forEach((value, key) => {
     headers[key] = value;
   });
+
+  let res = {};
+
+  try {
+    res = await request.json();
+  } catch (err) {
+    res = {};
+    console.error(err);
+  }
 
   let project;
 
@@ -46,7 +54,7 @@ export async function POST(
         headers: JSON.stringify(headers),
         body: JSON.stringify(res),
       },
-      [Permission.read(Role.team(projectId))]
+      [Permission.read(Role.team(projectId)), Permission.read(Role.any())]
     );
 
     return Response.json(data);

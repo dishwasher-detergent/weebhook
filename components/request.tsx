@@ -23,9 +23,9 @@ export function Request({ timestamp, headers, body }: RequestProps) {
         animate={{ opacity: 1, height: "auto" }}
         exit={{ opacity: 0, height: 0 }}
         transition={{ duration: 0.25 }}
-        className="p-2 rounded-xl border border-dashed bg-muted/25 space-y-4"
+        className="p-2 rounded-xl border border-dashed bg-muted/25"
       >
-        <header className="flex flex-row gap-2 items-center justify-between cursor-pointer">
+        <header className="flex flex-row gap-2 items-center justify-between cursor-pointer mb-4">
           <div className="flex flex-row gap-2 items-center">
             <Badge variant="default">POST</Badge>
             <p className="text-muted-foreground text-sm font-semibold">
@@ -33,9 +33,8 @@ export function Request({ timestamp, headers, body }: RequestProps) {
             </p>
           </div>
         </header>
-
-        <div>
-          <h4 className="font-semibold text-primary-foreground text-base mb-1 ml-2">
+        <div className="mb-4">
+          <h4 className="font-semibold text-primary-foreground text-sm mb-2 ml-2">
             Headers
           </h4>
           <div className="rounded-xl border border-dashed overflow-x-auto bg-background">
@@ -59,7 +58,7 @@ export function Request({ timestamp, headers, body }: RequestProps) {
           </div>
         </div>
         <div>
-          <h4 className="font-semibold text-primary-foreground text-base mb-1 ml-2">
+          <h4 className="font-semibold text-primary-foreground text-sm mb-2 ml-2">
             Body
           </h4>
           <div className="p-4 rounded-xl border border-dashed bg-background code">
