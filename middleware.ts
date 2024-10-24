@@ -9,11 +9,13 @@ export const config = {
      * 3. /_static (inside /public)
      * 4. all root files inside /public (e.g. /favicon.ico)
      */
-    "/((?!_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)",
+    "/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)",
   ],
 };
 
 export default async function middleware(req: NextRequest) {
+  console.log(req.headers);
+
   let hostname = req.headers
     .get("host")!
     .replace(".localhost:3000", `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
@@ -39,5 +41,8 @@ export default async function middleware(req: NextRequest) {
 
   const route = hostname.split(".")[0];
 
-  return NextResponse.rewrite(new URL(`/api/${route}`, req.url));
+  console.log(route);
+
+  // return NextResponse.rewrite(new URL(`/api/${route}`, req.url));
+  return NextResponse.next();
 }
