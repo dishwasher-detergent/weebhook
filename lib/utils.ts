@@ -5,6 +5,7 @@ import { DATABASE_ID, PROJECT_COLLECTION_ID } from "@/lib/constants";
 import { Permission, Role } from "appwrite";
 import { clsx, type ClassValue } from "clsx";
 import { generate } from "random-words";
+import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -18,6 +19,13 @@ export async function createWebhook() {
 
   if (!user) {
     return;
+  }
+
+  const joinedTeams = await team.list();
+
+  if (joinedTeams.total >= 2) {
+    toast.error("You've reached the maximum webhook limit.");
+    return null;
   }
 
   const teamData = await team.create(id[0], id[0]);
