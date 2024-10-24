@@ -18,6 +18,7 @@ export async function POST(
 
   request.headers.forEach((value, key) => {
     if (key.includes("vercel")) return;
+    if (key == "x-matched-path") return;
 
     headers[key] = value;
   });

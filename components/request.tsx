@@ -45,7 +45,9 @@ export function Request({ timestamp, headers, body }: RequestProps) {
                 <TableBody>
                   {Object.entries(headerObj).map(([key, value]) => (
                     <TableRow key={key}>
-                      <TableCell className="text-xs">{key}</TableCell>
+                      <TableCell className="text-xs whitespace-nowrap">
+                        {key}
+                      </TableCell>
                       <TableCell className="text-xs">{value}</TableCell>
                     </TableRow>
                   ))}

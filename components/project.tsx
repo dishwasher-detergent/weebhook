@@ -143,7 +143,7 @@ export function Project() {
                 <span className="truncate">
                   {location.protocol}&#47;&#47;
                   <span className="font-bold text-foreground">
-                    {projectIdValue ?? "loading"}
+                    {projectIdValue ?? "not-found"}
                   </span>
                   .{HOSTNAME}
                 </span>
