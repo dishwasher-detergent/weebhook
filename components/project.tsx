@@ -19,7 +19,7 @@ import {
 import { Project as ProjectItem } from "@/interfaces/project.interface";
 import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, HOSTNAME, PROJECT_COLLECTION_ID } from "@/lib/constants";
-import { cn, createWebhook } from "@/lib/utils";
+import { cn, createWebhook, deleteWebhook } from "@/lib/utils";
 
 import { useAtom } from "jotai";
 import {
@@ -29,6 +29,7 @@ import {
   LucideCopyCheck,
   LucideLoader2,
   LucidePlus,
+  LucideTrash,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -44,29 +45,35 @@ export function Project() {
   const [isLoading, setLoading] = useState<boolean>(true);
   const [isLoadingCreateWebhook, setIsLoadingCreateWebhook] =
     useState<boolean>(false);
+  const [isLoadingDeleteWebhook, setIsLoadingDeleteWebhook] =
+    useState<boolean>(false);
   const [copy, setCopy] = useState<boolean>(false);
 
-  useEffect(() => {
-    async function fetchProjects() {
-      setLoading(true);
-      const { database } = createClient();
+  async function fetchProjects() {
+    setLoading(true);
+    const { database } = createClient();
 
-      const data = await database.listDocuments<ProjectItem>(
-        DATABASE_ID,
-        PROJECT_COLLECTION_ID
-      );
+    const data = await database.listDocuments<ProjectItem>(
+      DATABASE_ID,
+      PROJECT_COLLECTION_ID
+    );
 
-      if (data.documents.length > 0) {
-        setProjects(data.documents);
-      }
-
-      setLoading(false);
+    if (data.documents.length > 0) {
+      setProjects(data.documents);
     }
 
+    setLoading(false);
+  }
+
+  useEffect(() => {
     if (projects.length == 0) {
       fetchProjects();
     }
   }, [projects]);
+
+  useEffect(() => {
+    fetchProjects();
+  }, [projectIdValue]);
 
   async function create() {
     setIsLoadingCreateWebhook(true);
@@ -81,6 +88,24 @@ export function Project() {
     setIsLoadingCreateWebhook(false);
   }
 
+  async function deleteWH() {
+    setIsLoadingDeleteWebhook(true);
+
+    if (projectIdValue) {
+      const project = await deleteWebhook(projectIdValue);
+
+      if (project) {
+        setProjectIdValue(project);
+        router.push(project);
+      } else {
+        setProjectIdValue(null);
+        router.push("/");
+      }
+    }
+
+    setIsLoadingDeleteWebhook(false);
+  }
+
   function onCopy() {
     setCopy(true);
 
@@ -93,7 +118,7 @@ export function Project() {
     <div>
       <p className="font-bold text-primary-foreground text-sm mb-1">Endpoint</p>
       {isLoading && <Skeleton className="h-8" />}
-      {projects.length > 0 && (
+      {projects.length > 0 && !isLoading && (
         <div className="flex flex-row gap-1 items-center">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -161,6 +186,18 @@ export function Project() {
               <LucideLoader2 className="animate-spin size-3.5" />
             ) : (
               <LucidePlus className="size-3.5" />
+            )}
+          </Button>
+          <Button
+            onClick={deleteWH}
+            variant="outline"
+            size="icon"
+            className="flex-none size-8"
+          >
+            {isLoadingDeleteWebhook ? (
+              <LucideLoader2 className="animate-spin size-3.5" />
+            ) : (
+              <LucideTrash className="size-3.5" />
             )}
           </Button>
           <CopyToClipboard

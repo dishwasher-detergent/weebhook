@@ -84,6 +84,7 @@ export default function ProjectPage() {
 
         setProjectId(pathname.slice(1));
       } catch {
+        setProjectId(null);
         router.push("not-found");
       }
     }

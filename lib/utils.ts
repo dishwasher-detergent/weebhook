@@ -1,8 +1,12 @@
 import { Project } from "@/interfaces/project.interface";
 import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
-import { DATABASE_ID, PROJECT_COLLECTION_ID } from "@/lib/constants";
+import {
+  DATABASE_ID,
+  PROJECT_COLLECTION_ID,
+  REQUEST_COLLECTION_ID,
+} from "@/lib/constants";
 
-import { Permission, Role } from "appwrite";
+import { Permission, Query, Role } from "appwrite";
 import { clsx, type ClassValue } from "clsx";
 import { generate } from "random-words";
 import { toast } from "sonner";
@@ -46,4 +50,49 @@ export async function createWebhook() {
   );
 
   return data;
+}
+
+export async function deleteWebhook(projectId: string) {
+  const { database, team } = createClient();
+  const user = await getLoggedInUser();
+
+  if (!user) {
+    return;
+  }
+
+  await team.delete(projectId);
+  await database.deleteDocument(DATABASE_ID, PROJECT_COLLECTION_ID, projectId);
+
+  let response;
+  const queries = [Query.limit(50), Query.equal("projectId", projectId)];
+
+  do {
+    response = await database.listDocuments(
+      DATABASE_ID,
+      REQUEST_COLLECTION_ID,
+      queries
+    );
+
+    await Promise.all(
+      response.documents.map((document) =>
+        database.deleteDocument(
+          DATABASE_ID,
+          REQUEST_COLLECTION_ID,
+          document.$id
+        )
+      )
+    );
+  } while (response.documents.length > 0);
+
+  const data = await database.listDocuments(
+    DATABASE_ID,
+    PROJECT_COLLECTION_ID,
+    [Query.orderDesc("$createdAt"), Query.limit(1)]
+  );
+
+  if (data.documents.length > 0) {
+    return data.documents[0].$id;
+  }
+
+  return null;
 }
