@@ -28,7 +28,7 @@ export function Request({ timestamp, headers, body }: RequestProps) {
         <header className="flex flex-row gap-2 items-center justify-between cursor-pointer mb-4">
           <div className="flex flex-row gap-2 items-center">
             <Badge variant="default">POST</Badge>
-            <p className="text-muted-foreground text-sm font-semibold">
+            <p className="text-muted-foreground text-xs font-semibold">
               {timestamp}
             </p>
           </div>
@@ -43,8 +43,8 @@ export function Request({ timestamp, headers, body }: RequestProps) {
                 <TableBody>
                   {Object.entries(headerObj).map(([key, value]) => (
                     <TableRow key={key}>
-                      <TableCell>{key}</TableCell>
-                      <TableCell>{value}</TableCell>
+                      <TableCell className="text-xs">{key}</TableCell>
+                      <TableCell className="text-xs">{value}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
