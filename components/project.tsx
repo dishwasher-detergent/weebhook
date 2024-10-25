@@ -195,14 +195,14 @@ export function Project() {
               onCopy={onCopy}
             >
               <Button
-                variant="outline"
+                variant={copy ? "success" : "outline"}
                 size="icon"
                 className="flex-none size-8"
               >
                 {!copy ? (
                   <LucideCopy className="size-3.5" />
                 ) : (
-                  <LucideCopyCheck className="size-3.5 text-green-400" />
+                  <LucideCopyCheck className="size-3.5" />
                 )}
               </Button>
             </CopyToClipboard>
