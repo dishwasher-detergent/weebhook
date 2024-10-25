@@ -73,7 +73,7 @@ export default function Home() {
       {!isLoading && (
         <div className="flex flex-col items-center gap-2">
           <h1 className="font-bold text-xl">
-            Looks like you don't have any webhooks created yet.
+            Looks like you don&apos;t have any webhooks created yet.
           </h1>
           <p>Lets get started!</p>
           <Button onClick={create}>
