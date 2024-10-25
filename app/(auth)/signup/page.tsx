@@ -43,7 +43,7 @@ export default function SignUpPage() {
       <form action={formAction}>
         <CardContent className="grid gap-4">
           {state.message != "" ? (
-            <p className="p-2 rounded-xl border border-destructive border-dashed font-bold overflow-hidden w-full text-xs text-foreground">
+            <p className="p-2 rounded-xl border border-destructive border-dashed font-bold overflow-hidden w-full text-xs text-destructive">
               {state.message}
             </p>
           ) : null}
