@@ -1,4 +1,4 @@
-import { projectId } from "@/atoms/project";
+import { projectIdAtom } from "@/atoms/project";
 import { Request as RequestItem } from "@/interfaces/request.interface";
 import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, REQUEST_COLLECTION_ID } from "@/lib/constants";
@@ -8,7 +8,7 @@ import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 
 export const useRequests = () => {
-  const projectIdValue = useAtomValue(projectId);
+  const projectId = useAtomValue(projectIdAtom);
   const [requests, setRequests] = useState<RequestItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [client, setClient] = useState<Client | null>(null);
@@ -28,10 +28,10 @@ export const useRequests = () => {
       setLoading(false);
     }
 
-    if (projectIdValue && requests.length === 0) {
-      fetchRequests(projectIdValue);
+    if (projectId && requests.length === 0) {
+      fetchRequests(projectId);
     }
-  }, [projectIdValue, requests.length]);
+  }, [projectId, requests.length]);
 
   useEffect(() => {
     async function fetchClient() {
@@ -49,7 +49,7 @@ export const useRequests = () => {
       unsubscribe = client.subscribe<RequestItem>(
         `databases.${DATABASE_ID}.collections.${REQUEST_COLLECTION_ID}.documents`,
         (response) => {
-          if (response.payload.projectId === projectIdValue) {
+          if (response.payload.projectId === projectId) {
             if (
               response.events.includes(
                 "databases.*.collections.*.documents.*.create"
@@ -75,7 +75,7 @@ export const useRequests = () => {
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, [client, projectIdValue]);
+  }, [client, projectId]);
 
   return { requests, loading };
 };
