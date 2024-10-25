@@ -44,7 +44,10 @@ export default function ProjectPage() {
   return (
     <>
       <main className="max-w-4xl mx-auto p-4 px-4 md:px-8">
-        <h2 className="font-bold text-foreground mb-2">Requests</h2>
+        <h2 className="font-bold text-foreground mb-2 inline-flex items-center gap-2">
+          Requests
+          <div className="ring-emerald-500/25 bg-emerald-500 ring-4 size-2 rounded-full animate-pulse" />
+        </h2>
         <div className="flex flex-col gap-4">
           {!loading ? (
             <>

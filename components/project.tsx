@@ -132,7 +132,7 @@ export function Project() {
       ) : null}
       {isLoading && <Skeleton className="h-8" />}
       {projects.length > 0 && !isLoading && (
-        <div className="flex flex-col md:flex-row gap-1 ,md:items-center">
+        <div className="flex flex-col md:flex-row gap-1">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
@@ -189,7 +189,19 @@ export function Project() {
               </Command>
             </PopoverContent>
           </Popover>
-          <div className="flex flex-row gap-1">
+          <div className="flex flex-row gap-1 justify-end md:justify-start">
+            <Button
+              onClick={create}
+              variant="outline"
+              size="icon"
+              className="flex-none size-8"
+            >
+              {isLoadingCreateWebhook ? (
+                <LucideLoader2 className="animate-spin size-3.5" />
+              ) : (
+                <LucidePlus className="size-3.5" />
+              )}
+            </Button>
             <CopyToClipboard
               text={`${location.protocol}//${projectId}.${HOSTNAME}`}
               onCopy={onCopy}
@@ -206,19 +218,8 @@ export function Project() {
                 )}
               </Button>
             </CopyToClipboard>
-            <Button
-              onClick={create}
-              variant="outline"
-              size="icon"
-              className="flex-none size-8"
-            >
-              {isLoadingCreateWebhook ? (
-                <LucideLoader2 className="animate-spin size-3.5" />
-              ) : (
-                <LucidePlus className="size-3.5" />
-              )}
-            </Button>
             <Share />
+
             <Button
               onClick={deleteWH}
               variant="destructive"
