@@ -16,7 +16,7 @@ export async function signInWithEmail(prevState: any, formData: FormData) {
 
     (await cookies()).set(COOKIE_KEY, session.secret, {
       path: "/",
-      httpOnly: false,
+      httpOnly: true,
       sameSite: "strict",
       secure: true,
     });

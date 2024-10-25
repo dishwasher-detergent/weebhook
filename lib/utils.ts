@@ -18,7 +18,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export async function createWebhook() {
-  const { database, team } = createClient();
+  const { database, team } = await createClient();
   const user = await getLoggedInUser();
   const maxCheckCount = 5;
   let id = generate({
@@ -104,7 +104,7 @@ export async function createWebhook() {
 }
 
 export async function deleteWebhook(projectId: string) {
-  const { database, team } = createClient();
+  const { database, team } = await createClient();
   const user = await getLoggedInUser();
 
   if (!user) {
@@ -151,7 +151,7 @@ export async function deleteWebhook(projectId: string) {
 }
 
 export async function shareWebhook(projectId: string, email: string) {
-  const { team } = createClient();
+  const { team } = await createClient();
 
   try {
     await team.createMembership(

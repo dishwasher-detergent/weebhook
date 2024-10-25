@@ -3,18 +3,19 @@
 import { COOKIE_KEY, ENDPOINT, PROJECT_ID } from "@/lib/constants";
 
 import { Account, Client, Databases, Storage, Teams } from "appwrite";
-import { getCookie } from "cookies-next";
 
-export function createClient() {
+export async function createClient() {
   const client = new Client().setEndpoint(ENDPOINT).setProject(PROJECT_ID);
 
-  const cookie = getCookie(COOKIE_KEY);
+  const req = await fetch("/api/auth/session");
 
-  if (cookie) {
-    client.setSession(cookie);
+  const session = await req.json();
+
+  if (session) {
+    client.setSession(session.value);
 
     const localStorageCookie: any = {};
-    localStorageCookie[COOKIE_KEY] = cookie;
+    localStorageCookie[COOKIE_KEY] = session.value;
 
     window.localStorage.setItem(
       "cookieFallback",
@@ -41,7 +42,7 @@ export function createClient() {
 
 export async function getLoggedInUser() {
   try {
-    const { account } = createClient();
+    const { account } = await createClient();
     return await account.get();
   } catch {
     return null;

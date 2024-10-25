@@ -12,6 +12,7 @@ import {
   PROJECT_COLLECTION_ID,
   REQUEST_COLLECTION_ID,
 } from "@/lib/constants";
+import { Client } from "appwrite";
 
 import { useAtom } from "jotai";
 import { usePathname, useRouter } from "next/navigation";
@@ -22,13 +23,14 @@ export default function ProjectPage() {
   const [projectIdValue, setProjectId] = useAtom(projectId);
   const [requests, setRequests] = useState<RequestItem[]>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
-  const { database } = createClient();
+  const [client, setClient] = useState<Client | null>(null);
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
     async function fetchRequests(projectId: string) {
       setLoading(true);
+      const { database } = await createClient();
 
       const data = await database.listDocuments<RequestItem>(
         DATABASE_ID,
@@ -46,41 +48,54 @@ export default function ProjectPage() {
   }, []);
 
   useEffect(() => {
-    const { client } = createClient();
+    async function fetchClient() {
+      const { client } = await createClient();
 
-    const unsubscribe = client.subscribe<RequestItem>(
-      `databases.${DATABASE_ID}.collections.${REQUEST_COLLECTION_ID}.documents`,
-      (response) => {
-        if (response.payload.projectId == projectIdValue) {
-          if (
-            response.events.includes(
-              "databases.*.collections.*.documents.*.create"
-            )
-          ) {
-            setRequests((prev) => [response.payload, ...prev]);
-          }
+      setClient(client);
+    }
 
-          if (
-            response.events.includes(
-              "databases.*.collections.*.documents.*.delete"
-            )
-          ) {
-            setRequests((prev) =>
-              prev.filter((x) => x.$id !== response.payload.$id)
-            );
-          }
-        }
-      }
-    );
+    fetchClient();
+  }, []);
+
+  useEffect(() => {
+    let unsubscribe;
 
     console.log(client);
 
+    if (client) {
+      unsubscribe = client.subscribe<RequestItem>(
+        `databases.${DATABASE_ID}.collections.${REQUEST_COLLECTION_ID}.documents`,
+        (response) => {
+          if (response.payload.projectId == projectIdValue) {
+            if (
+              response.events.includes(
+                "databases.*.collections.*.documents.*.create"
+              )
+            ) {
+              setRequests((prev) => [response.payload, ...prev]);
+            }
+
+            if (
+              response.events.includes(
+                "databases.*.collections.*.documents.*.delete"
+              )
+            ) {
+              setRequests((prev) =>
+                prev.filter((x) => x.$id !== response.payload.$id)
+              );
+            }
+          }
+        }
+      );
+    }
+
     return unsubscribe;
-  }, []);
+  }, [client]);
 
   useEffect(() => {
     async function validateProject() {
       try {
+        const { database } = await createClient();
         await database.getDocument<Project>(
           DATABASE_ID,
           PROJECT_COLLECTION_ID,

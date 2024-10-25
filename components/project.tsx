@@ -52,7 +52,7 @@ export function Project() {
 
   async function fetchProjects() {
     setLoading(true);
-    const { database } = createClient();
+    const { database } = await createClient();
 
     const data = await database.listDocuments<ProjectItem>(
       DATABASE_ID,

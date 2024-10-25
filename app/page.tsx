@@ -17,12 +17,12 @@ export default function Home() {
   const [isLoadingCreateWebhook, setIsLoadingCreateWebhook] =
     useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { database } = createClient();
   const router = useRouter();
 
   useEffect(() => {
     async function getProjects() {
       setIsLoading(true);
+      const { database } = await createClient();
       const user = await getLoggedInUser();
 
       if (!user) {
