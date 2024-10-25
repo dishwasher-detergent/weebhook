@@ -15,13 +15,13 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
         outline: "text-foreground",
-        get: "bg-emerald-500 dark:bg-emerald-700 text-foreground border-transparent",
-        post: "bg-amber-500 dark:bg-amber-700 text-foreground border-transparent",
-        put: "bg-blue-500 dark:bg-blue-700 text-foreground border-transparent",
+        get: "bg-emerald-500 dark:bg-emerald-700 text-primary-foreground border-transparent",
+        post: "bg-amber-500 dark:bg-amber-700 text-primary-foreground border-transparent",
+        put: "bg-blue-500 dark:bg-blue-700 text-primary-foreground border-transparent",
         patch:
-          "bg-violet-500 dark:bg-violet-700 text-foreground border-transparent",
+          "bg-violet-500 dark:bg-violet-700 text-primary-foreground border-transparent",
         delete:
-          "bg-rose-500 dark:bg-rose-700 text-foreground border-transparent",
+          "bg-rose-500 dark:bg-rose-700 text-primary-foreground border-transparent",
       },
     },
     defaultVariants: {
