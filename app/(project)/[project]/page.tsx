@@ -1,96 +1,23 @@
 "use client";
 
-import { projectId } from "@/atoms/project";
+import { projectIdAtom } from "@/atoms/project";
 import { NoRequests } from "@/components/no-requests";
 import { Request } from "@/components/request";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useRequests } from "@/hooks/useRequests";
 import { Project } from "@/interfaces/project.interface";
-import { Request as RequestItem } from "@/interfaces/request.interface";
 import { createClient } from "@/lib/client/appwrite";
-import {
-  DATABASE_ID,
-  PROJECT_COLLECTION_ID,
-  REQUEST_COLLECTION_ID,
-} from "@/lib/constants";
-import { Client } from "appwrite";
+import { DATABASE_ID, PROJECT_COLLECTION_ID } from "@/lib/constants";
 
 import { useAtom } from "jotai";
 import { usePathname, useRouter } from "next/navigation";
-import { Query } from "node-appwrite";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function ProjectPage() {
-  const [projectIdValue, setProjectId] = useAtom(projectId);
-  const [requests, setRequests] = useState<RequestItem[]>([]);
-  const [isLoading, setLoading] = useState<boolean>(true);
-  const [client, setClient] = useState<Client | null>(null);
+  const [projectId, setProjectId] = useAtom(projectIdAtom);
+  const { loading, requests } = useRequests();
   const router = useRouter();
   const pathname = usePathname();
-
-  useEffect(() => {
-    async function fetchRequests(projectId: string) {
-      setLoading(true);
-      const { database } = await createClient();
-
-      const data = await database.listDocuments<RequestItem>(
-        DATABASE_ID,
-        REQUEST_COLLECTION_ID,
-        [Query.equal("projectId", projectId), Query.orderDesc("$createdAt")]
-      );
-
-      setRequests(data.documents);
-      setLoading(false);
-    }
-
-    if (projectIdValue && requests.length == 0) {
-      fetchRequests(projectIdValue);
-    }
-  }, []);
-
-  useEffect(() => {
-    async function fetchClient() {
-      const { client } = await createClient();
-
-      setClient(client);
-    }
-
-    fetchClient();
-  }, []);
-
-  useEffect(() => {
-    let unsubscribe;
-
-    console.log(client);
-
-    if (client) {
-      unsubscribe = client.subscribe<RequestItem>(
-        `databases.${DATABASE_ID}.collections.${REQUEST_COLLECTION_ID}.documents`,
-        (response) => {
-          if (response.payload.projectId == projectIdValue) {
-            if (
-              response.events.includes(
-                "databases.*.collections.*.documents.*.create"
-              )
-            ) {
-              setRequests((prev) => [response.payload, ...prev]);
-            }
-
-            if (
-              response.events.includes(
-                "databases.*.collections.*.documents.*.delete"
-              )
-            ) {
-              setRequests((prev) =>
-                prev.filter((x) => x.$id !== response.payload.$id)
-              );
-            }
-          }
-        }
-      );
-    }
-
-    return unsubscribe;
-  }, [client]);
 
   useEffect(() => {
     async function validateProject() {
@@ -109,7 +36,7 @@ export default function ProjectPage() {
       }
     }
 
-    if (pathname != projectIdValue) {
+    if (pathname != projectId) {
       validateProject();
     }
   }, []);
@@ -119,7 +46,7 @@ export default function ProjectPage() {
       <main className="max-w-4xl mx-auto p-4 px-4 md:px-8">
         <h2 className="font-bold text-foreground mb-2">Requests</h2>
         <div className="flex flex-col gap-4">
-          {!isLoading ? (
+          {!loading ? (
             <>
               {requests.map((item) => (
                 <Request

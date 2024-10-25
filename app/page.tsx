@@ -1,6 +1,6 @@
 "use client";
 
-import { projectId } from "@/atoms/project";
+import { projectIdAtom } from "@/atoms/project";
 import { Button } from "@/components/ui/button";
 import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
 import { DATABASE_ID, PROJECT_COLLECTION_ID } from "@/lib/constants";
@@ -13,7 +13,7 @@ import { Query } from "node-appwrite";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [projectIdValue, setProjectIdValue] = useAtom(projectId);
+  const [projectId, setprojectId] = useAtom(projectIdAtom);
   const [isLoadingCreateWebhook, setIsLoadingCreateWebhook] =
     useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -36,26 +36,26 @@ export default function Home() {
       );
 
       if (data.documents.length > 0) {
-        setProjectIdValue(data.documents[0].$id);
+        setprojectId(data.documents[0].$id);
         router.replace(data.documents[0].$id);
       }
 
       setIsLoading(false);
     }
 
-    if (!projectIdValue) {
+    if (!projectId) {
       getProjects();
     } else {
-      router.replace(projectIdValue);
+      router.replace(projectId);
     }
-  }, [projectIdValue]);
+  }, [projectId]);
 
   async function create() {
     setIsLoadingCreateWebhook(true);
     const data = await createWebhook();
 
     if (data) {
-      setProjectIdValue(data.$id);
+      setprojectId(data.$id);
       router.push(data.$id);
     }
 

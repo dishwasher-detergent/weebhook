@@ -1,6 +1,6 @@
 "use client";
 
-import { projectId } from "@/atoms/project";
+import { projectIdAtom } from "@/atoms/project";
 import { Share } from "@/components/share";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,7 +40,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 export function Project() {
   const router = useRouter();
 
-  const [projectIdValue, setProjectIdValue] = useAtom(projectId);
+  const [projectId, setprojectId] = useAtom(projectIdAtom);
   const [open, setOpen] = useState(false);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
@@ -78,7 +78,7 @@ export function Project() {
 
     if (data) {
       setProjects((prev) => [...prev, data]);
-      setProjectIdValue(data.$id);
+      setprojectId(data.$id);
       router.push(data.$id);
     }
 
@@ -88,15 +88,15 @@ export function Project() {
   async function deleteWH() {
     setIsLoadingDeleteWebhook(true);
 
-    if (projectIdValue) {
-      const project = await deleteWebhook(projectIdValue);
+    if (projectId) {
+      const project = await deleteWebhook(projectId);
       await fetchProjects();
 
       if (project) {
-        setProjectIdValue(project);
+        setprojectId(project);
         router.push(project);
       } else {
-        setProjectIdValue(null);
+        setprojectId(null);
         router.push("/");
       }
     }
@@ -145,7 +145,7 @@ export function Project() {
                 <span className="truncate">
                   {location.protocol}&#47;&#47;
                   <span className="font-bold text-foreground">
-                    {projectIdValue ?? "not-found"}
+                    {projectId ?? "not-found"}
                   </span>
                   .{HOSTNAME}
                 </span>
@@ -166,7 +166,7 @@ export function Project() {
                         key={project.$id}
                         value={project.$id}
                         onSelect={(currentValue) => {
-                          setProjectIdValue(currentValue);
+                          setprojectId(currentValue);
                           setOpen(false);
                           router.push(project.$id);
                         }}
@@ -175,7 +175,7 @@ export function Project() {
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            projectIdValue === project.$id
+                            projectId === project.$id
                               ? "opacity-100"
                               : "opacity-0"
                           )}
@@ -191,7 +191,7 @@ export function Project() {
           </Popover>
           <div className="flex flex-row gap-1">
             <CopyToClipboard
-              text={`${location.protocol}//${projectIdValue}.${HOSTNAME}`}
+              text={`${location.protocol}//${projectId}.${HOSTNAME}`}
               onCopy={onCopy}
             >
               <Button

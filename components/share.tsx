@@ -1,6 +1,6 @@
 "use client";
 
-import { projectId } from "@/atoms/project";
+import { projectIdAtom } from "@/atoms/project";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -85,7 +85,7 @@ interface FormProps extends React.ComponentProps<"form"> {
 }
 
 function Form({ className, setOpen }: FormProps) {
-  const [projectIdValue, setProjectIdValue] = useAtom(projectId);
+  const [projectId, _] = useAtom(projectIdAtom);
 
   const [isLoadingShareWebhook, setIsLoadingShareWebhook] =
     useState<boolean>(false);
@@ -94,7 +94,7 @@ function Form({ className, setOpen }: FormProps) {
   async function share() {
     setIsLoadingShareWebhook(true);
 
-    if (!projectIdValue) {
+    if (!projectId) {
       toast.error("No webhook specified!");
       return;
     }
@@ -104,7 +104,7 @@ function Form({ className, setOpen }: FormProps) {
       return;
     }
 
-    await shareWebhook(projectIdValue, email);
+    await shareWebhook(projectId, email);
 
     setIsLoadingShareWebhook(false);
     setOpen(false);

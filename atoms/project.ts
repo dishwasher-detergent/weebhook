@@ -1,6 +1,6 @@
 import { atomWithStorage } from "jotai/utils";
 
-export const projectId = atomWithStorage<string | null>(
+export const projectIdAtom = atomWithStorage<string | null>(
   "PROJECT_ID",
   null,
   undefined,
@@ -10,5 +10,5 @@ export const projectId = atomWithStorage<string | null>(
 );
 
 if (process.env.NODE_ENV !== "production") {
-  projectId.debugLabel = "Selected Project";
+  projectIdAtom.debugLabel = "Selected Project";
 }
