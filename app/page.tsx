@@ -71,19 +71,25 @@ export default function Home() {
         </p>
       )}
       {!isLoading && (
-        <Button onClick={create}>
-          {isLoadingCreateWebhook ? (
-            <>
-              <LucideLoader2 className="animate-spin size-4 mr-2" />
-              Creating Webhook
-            </>
-          ) : (
-            <>
-              <LucidePlus className="size-4 mr-2" />
-              Create Webhook
-            </>
-          )}
-        </Button>
+        <div className="flex flex-col items-center gap-2">
+          <h1 className="font-bold text-xl">
+            Looks like you don't have any webhooks created yet.
+          </h1>
+          <p>Lets get started!</p>
+          <Button onClick={create}>
+            {isLoadingCreateWebhook ? (
+              <>
+                <LucideLoader2 className="animate-spin size-4 mr-2" />
+                Creating Webhook
+              </>
+            ) : (
+              <>
+                <LucidePlus className="size-4 mr-2" />
+                Create Webhook
+              </>
+            )}
+          </Button>
+        </div>
       )}
     </main>
   );

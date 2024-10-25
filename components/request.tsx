@@ -11,9 +11,10 @@ export interface RequestProps {
   timestamp: string;
   headers: string;
   body: string;
+  type: "get" | "post" | "put" | "patch" | "delete";
 }
 
-export function Request({ timestamp, headers, body }: RequestProps) {
+export function Request({ timestamp, headers, body, type }: RequestProps) {
   const headerObj: Record<string, string> | null = headers
     ? JSON.parse(headers)
     : null;
@@ -29,8 +30,8 @@ export function Request({ timestamp, headers, body }: RequestProps) {
       >
         <header className="flex flex-row gap-2 items-center justify-between mb-4">
           <div className="flex flex-row gap-2 items-center">
-            <Badge variant="post" className="uppercase">
-              POST
+            <Badge variant={type} className="uppercase">
+              {type}
             </Badge>
             <p className="text-muted-foreground text-xs font-semibold">
               {timestamp}

@@ -56,6 +56,7 @@ export async function POST(
         projectId: projectId,
         headers: JSON.stringify(headers),
         body: JSON.stringify(res),
+        type: "POST".toLowerCase(),
       },
       [
         Permission.read(Role.team(projectId)),

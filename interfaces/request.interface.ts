@@ -4,5 +4,5 @@ export interface Request extends Models.Document {
   projectId: string;
   headers: string;
   body: string;
-  ipAddress: string;
+  type: "get" | "post" | "put" | "patch" | "delete";
 }

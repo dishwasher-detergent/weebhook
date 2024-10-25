@@ -57,6 +57,7 @@ export default function ProjectPage() {
                   timestamp={item.$createdAt}
                   body={item.body}
                   headers={item.headers}
+                  type={item.type}
                 />
               ))}
               {requests.length === 0 && <NoRequests />}
