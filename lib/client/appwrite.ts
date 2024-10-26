@@ -19,7 +19,7 @@ export async function createClient() {
 
     window.localStorage.setItem(
       "cookieFallback",
-      JSON.stringify(localStorageCookie)
+      JSON.stringify(localStorageCookie),
     );
   }
 

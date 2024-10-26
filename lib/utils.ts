@@ -47,13 +47,13 @@ export async function createWebhook() {
     const checkedProjects = await database.listDocuments(
       DATABASE_ID,
       PROJECT_COLLECTION_ID,
-      [Query.equal("$id", id)]
+      [Query.equal("$id", id)],
     );
 
     if (checkedProjects.total < 10) {
       doesProjectExist = false;
       projectId = id.filter(
-        (x) => !checkedProjects.documents.map((y) => y.$id).includes(x)
+        (x) => !checkedProjects.documents.map((y) => y.$id).includes(x),
       )[0];
     } else {
       id = generate({
@@ -92,7 +92,7 @@ export async function createWebhook() {
         Permission.write(Role.team(teamData.$id)),
         Permission.read(Role.user(user?.$id)),
         Permission.write(Role.user(user?.$id)),
-      ]
+      ],
     );
 
     toast.success(`${data.$id} has been created!`);
@@ -118,7 +118,7 @@ export async function deleteWebhook(projectId: string) {
     response = await database.listDocuments(
       DATABASE_ID,
       REQUEST_COLLECTION_ID,
-      queries
+      queries,
     );
 
     await Promise.all(
@@ -126,9 +126,9 @@ export async function deleteWebhook(projectId: string) {
         database.deleteDocument(
           DATABASE_ID,
           REQUEST_COLLECTION_ID,
-          document.$id
-        )
-      )
+          document.$id,
+        ),
+      ),
     );
   } while (response.documents.length > 0);
 
@@ -138,7 +138,7 @@ export async function deleteWebhook(projectId: string) {
   const data = await database.listDocuments(
     DATABASE_ID,
     PROJECT_COLLECTION_ID,
-    [Query.orderDesc("$createdAt"), Query.limit(1)]
+    [Query.orderDesc("$createdAt"), Query.limit(1)],
   );
 
   toast.error(`${projectId} has been deleted!`);
@@ -166,7 +166,7 @@ export async function leaveWebhook(projectId: string) {
 
   if (!membership) {
     toast.error(
-      `An error occured while leaving ${projectId}, please try again.`
+      `An error occured while leaving ${projectId}, please try again.`,
     );
     return;
   }
@@ -181,7 +181,7 @@ export async function leaveWebhook(projectId: string) {
   const data = await database.listDocuments(
     DATABASE_ID,
     PROJECT_COLLECTION_ID,
-    [Query.orderDesc("$createdAt"), Query.limit(1)]
+    [Query.orderDesc("$createdAt"), Query.limit(1)],
   );
 
   toast.error(`You've left ${projectId}!`);
@@ -204,7 +204,7 @@ export async function shareWebhook(projectId: string, email: string) {
       undefined,
       undefined,
       `${location.protocol}//${HOSTNAME}/${projectId}/accept`,
-      undefined
+      undefined,
     );
   } catch {
     toast.error(`Failed to invite ${email} to ${projectId}`);

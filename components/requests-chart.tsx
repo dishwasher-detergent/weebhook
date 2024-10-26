@@ -37,19 +37,19 @@ export function RequestsChart({ data }: { data: ChartData[] }) {
     () => ({
       requests: data.reduce((acc, curr) => acc + curr.requests, 0),
     }),
-    [data]
+    [data],
   );
 
   return (
     <Card>
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b border-dashed p-0 sm:flex-row">
-        <div className="flex flex-1 flex-col justify-center gap-1 py-2 px-4">
+        <div className="flex flex-1 flex-col justify-center gap-1 px-4 py-2">
           <CardTitle>Webhook Requests</CardTitle>
           <CardDescription className="text-xs">
             Showing total requests by the hour
           </CardDescription>
         </div>
-        <div className="relative z-30 flex flex-none flex-col justify-center gap-1 border-t text-left even:border-l bg-muted/50 sm:border-l border-dashed sm:border-t-0 py-2 px-6">
+        <div className="relative z-30 flex flex-none flex-col justify-center gap-1 border-t border-dashed bg-muted/50 px-6 py-2 text-left even:border-l sm:border-l sm:border-t-0">
           <span className="text-xs text-muted-foreground">
             {chartConfig.requests.label}
           </span>
@@ -104,7 +104,7 @@ export function RequestsChart({ data }: { data: ChartData[] }) {
                         hour: "numeric",
                         minute: "numeric",
                         second: "numeric",
-                      }
+                      },
                     );
                   }}
                 />

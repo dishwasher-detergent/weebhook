@@ -6,7 +6,7 @@ export const projectIdAtom = atomWithStorage<string | null>(
   undefined,
   {
     getOnInit: true,
-  }
+  },
 );
 
 if (process.env.NODE_ENV !== "production") {

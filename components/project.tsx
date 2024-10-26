@@ -62,7 +62,7 @@ export function Project() {
 
     const data = await database.listDocuments<ProjectItem>(
       DATABASE_ID,
-      PROJECT_COLLECTION_ID
+      PROJECT_COLLECTION_ID,
     );
 
     if (data.documents.length > 0) {
@@ -161,17 +161,17 @@ export function Project() {
 
   return (
     <div>
-      <p className="font-bold text-foreground text-sm mb-1">Endpoint</p>
+      <p className="mb-1 text-sm font-bold text-foreground">Endpoint</p>
       {projects.length == 0 && !loading ? (
         <Button onClick={create} size="sm">
           {loadingCreateWebhook ? (
             <>
-              <LucideLoader2 className="animate-spin size-4 mr-2" />
+              <LucideLoader2 className="mr-2 size-4 animate-spin" />
               Creating Webhook
             </>
           ) : (
             <>
-              <LucidePlus className="size-4 mr-2" />
+              <LucidePlus className="mr-2 size-4" />
               Create Webhook
             </>
           )}
@@ -179,7 +179,7 @@ export function Project() {
       ) : null}
       {loading && <Skeleton className="h-8" />}
       {projects.length > 0 && !loading && (
-        <div className="flex flex-col md:flex-row gap-1">
+        <div className="flex flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
@@ -187,7 +187,7 @@ export function Project() {
                 variant="outline"
                 role="combobox"
                 aria-expanded={open}
-                className="justify-between text-muted-foreground font-normal truncate w-full md:w-auto"
+                className="w-full justify-between truncate font-normal text-muted-foreground md:w-auto"
               >
                 <span className="truncate">
                   {location.protocol}&#47;&#47;
@@ -202,7 +202,7 @@ export function Project() {
             <PopoverContent className="p-0" align="start">
               <Command>
                 <CommandInput
-                  className="text-xs h-8"
+                  className="h-8 text-xs"
                   placeholder="Search project..."
                 />
                 <CommandList>
@@ -224,7 +224,7 @@ export function Project() {
                             "mr-2 h-4 w-4",
                             projectId === project.$id
                               ? "opacity-100"
-                              : "opacity-0"
+                              : "opacity-0",
                           )}
                         />
                         {project.$id}
@@ -236,15 +236,15 @@ export function Project() {
               </Command>
             </PopoverContent>
           </Popover>
-          <div className="flex flex-row gap-1 justify-end md:justify-start">
+          <div className="flex flex-row justify-end gap-1 md:justify-start">
             <Button
               onClick={create}
               variant="outline"
               size="icon"
-              className="flex-none size-8"
+              className="size-8 flex-none"
             >
               {loadingCreateWebhook ? (
-                <LucideLoader2 className="animate-spin size-3.5" />
+                <LucideLoader2 className="size-3.5 animate-spin" />
               ) : (
                 <LucidePlus className="size-3.5" />
               )}
@@ -256,7 +256,7 @@ export function Project() {
               <Button
                 variant={copy ? "success" : "outline"}
                 size="icon"
-                className="flex-none size-8"
+                className="size-8 flex-none"
               >
                 {!copy ? (
                   <LucideCopy className="size-3.5" />
@@ -273,10 +273,10 @@ export function Project() {
                     onClick={deleteWH}
                     variant="destructive"
                     size="icon"
-                    className="flex-none size-8"
+                    className="size-8 flex-none"
                   >
                     {loadingDeleteWebhook ? (
-                      <LucideLoader2 className="animate-spin size-3.5" />
+                      <LucideLoader2 className="size-3.5 animate-spin" />
                     ) : (
                       <LucideTrash className="size-3.5" />
                     )}
@@ -286,11 +286,11 @@ export function Project() {
                   <Button
                     variant="destructive"
                     size="icon"
-                    className="flex-none size-8"
+                    className="size-8 flex-none"
                     onClick={leave}
                   >
                     {loadingLeaveWebhook ? (
-                      <LucideLoader2 className="animate-spin size-3.5" />
+                      <LucideLoader2 className="size-3.5 animate-spin" />
                     ) : (
                       <LucideDoorOpen className="size-3.5" />
                     )}

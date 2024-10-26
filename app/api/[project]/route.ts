@@ -9,7 +9,7 @@ import { ID, Permission, Role } from "node-appwrite";
 
 export async function POST(
   request: Request,
-  props: { params: Promise<{ project: string }> }
+  props: { params: Promise<{ project: string }> },
 ) {
   const params = await props.params;
   const { database } = await createAdminClient();
@@ -38,12 +38,12 @@ export async function POST(
     project = await database.getDocument(
       DATABASE_ID,
       PROJECT_COLLECTION_ID,
-      projectId
+      projectId,
     );
   } catch {
     return Response.json(
       { error: `Project ID '${projectId}' was not found.` },
-      { status: 404 }
+      { status: 404 },
     );
   }
 
@@ -61,14 +61,14 @@ export async function POST(
       [
         Permission.read(Role.team(projectId)),
         Permission.write(Role.team(projectId)),
-      ]
+      ],
     );
 
     return Response.json(data);
   } catch {
     return Response.json(
       { error: "Failed to create request" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -43,7 +43,7 @@ export default function SignUpPage() {
       <form action={formAction}>
         <CardContent className="grid gap-4">
           {state.message != "" ? (
-            <p className="p-4 rounded-xl border border-destructive border-dashed font-bold overflow-hidden w-full text-xs text-destructive">
+            <p className="w-full overflow-hidden rounded-xl border border-dashed border-destructive p-4 text-xs font-bold text-destructive">
               {state.message}
             </p>
           ) : null}
@@ -75,12 +75,12 @@ export default function SignUpPage() {
           </Button>
         </CardFooter>
         <CardFooter>
-          <p className="text-center bg-background p-2 rounded-xl border border-dashed text-muted-foreground font-bold text-sm overflow-hidden w-full text-xs">
+          <p className="w-full overflow-hidden rounded-xl border border-dashed bg-background p-2 text-center text-sm text-xs font-bold text-muted-foreground">
             Already have an account?
             <Button
               variant="link"
               asChild
-              className="text-muted-foreground font-bold p-1 text-xs"
+              className="p-1 text-xs font-bold text-muted-foreground"
             >
               <Link href="/login">Login here</Link>
             </Button>

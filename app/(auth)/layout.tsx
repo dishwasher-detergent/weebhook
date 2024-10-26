@@ -14,7 +14,7 @@ export default async function Layout({
   }
 
   return (
-    <main className="grid place-items-center w-full min-h-dvh p-4">
+    <main className="grid min-h-dvh w-full place-items-center p-4">
       {children}
     </main>
   );

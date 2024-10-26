@@ -76,7 +76,7 @@ export default function Password() {
       >
         <CardContent className="grid gap-4">
           {passwordState ? (
-            <p className="p-4 rounded-xl border border-destructive border-dashed font-bold overflow-hidden w-full text-xs text-destructive">
+            <p className="w-full overflow-hidden rounded-xl border border-dashed border-destructive p-4 text-xs font-bold text-destructive">
               {passwordState}
             </p>
           ) : null}
@@ -86,7 +86,7 @@ export default function Password() {
               {email ? (
                 <p className="font-bold">{email}</p>
               ) : (
-                <Skeleton className="w-full h-9" />
+                <Skeleton className="h-9 w-full" />
               )}
             </div>
             <Label htmlFor="password">Password</Label>
@@ -104,7 +104,7 @@ export default function Password() {
         <CardFooter>
           <Button className="w-full" type="submit" disabled={loading}>
             {loading && (
-              <LucideLoader2 className="animate-spin size-3.5 mr-2" />
+              <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
             )}
             Create Password
           </Button>

@@ -21,7 +21,7 @@ export const useRequests = () => {
       const data = await database.listDocuments<RequestItem>(
         DATABASE_ID,
         REQUEST_COLLECTION_ID,
-        [Query.equal("projectId", projectId), Query.orderDesc("$createdAt")]
+        [Query.equal("projectId", projectId), Query.orderDesc("$createdAt")],
       );
 
       setRequests(data.documents);
@@ -52,7 +52,7 @@ export const useRequests = () => {
           if (response.payload.projectId === projectId) {
             if (
               response.events.includes(
-                "databases.*.collections.*.documents.*.create"
+                "databases.*.collections.*.documents.*.create",
               )
             ) {
               setRequests((prev) => [response.payload, ...prev]);
@@ -60,15 +60,15 @@ export const useRequests = () => {
 
             if (
               response.events.includes(
-                "databases.*.collections.*.documents.*.delete"
+                "databases.*.collections.*.documents.*.delete",
               )
             ) {
               setRequests((prev) =>
-                prev.filter((x) => x.$id !== response.payload.$id)
+                prev.filter((x) => x.$id !== response.payload.$id),
               );
             }
           }
-        }
+        },
       );
     }
 

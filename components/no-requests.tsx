@@ -8,7 +8,7 @@ export function NoRequests() {
         animate={{ opacity: 1, height: "12rem" }}
         exit={{ opacity: 0, height: 0 }}
         transition={{ duration: 0.25 }}
-        className="p-4 grid place-items-center rounded-xl border border-dashed text-muted-foreground font-bold text-sm overflow-hidden"
+        className="grid place-items-center overflow-hidden rounded-xl border border-dashed p-4 text-sm font-bold text-muted-foreground"
       >
         No requests have been recieved.
       </motion.div>

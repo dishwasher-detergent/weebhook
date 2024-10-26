@@ -38,7 +38,7 @@ export default function Home() {
       const data = await database.listDocuments(
         DATABASE_ID,
         PROJECT_COLLECTION_ID,
-        [Query.orderDesc("$createdAt"), Query.limit(1)]
+        [Query.orderDesc("$createdAt"), Query.limit(1)],
       );
 
       if (data.documents.length > 0) {
@@ -65,28 +65,28 @@ export default function Home() {
   }
 
   return (
-    <main className="grid place-items-center w-full min-h-dvh">
+    <main className="grid min-h-dvh w-full place-items-center">
       {loading && (
-        <p className="flex flex-row gap-2 items-center">
-          <LucideLoader2 className="animate-spin size-4" />
+        <p className="flex flex-row items-center gap-2">
+          <LucideLoader2 className="size-4 animate-spin" />
           Checking for existing webhooks
         </p>
       )}
       {!loading && (
         <div className="flex flex-col items-center gap-2">
-          <h1 className="font-bold text-xl">
+          <h1 className="text-xl font-bold">
             Looks like you don&apos;t have any webhooks created yet.
           </h1>
           <p>Lets get started!</p>
           <Button onClick={create}>
             {loadingCreateWebhook ? (
               <>
-                <LucideLoader2 className="animate-spin size-4 mr-2" />
+                <LucideLoader2 className="mr-2 size-4 animate-spin" />
                 Creating Webhook
               </>
             ) : (
               <>
-                <LucidePlus className="size-4 mr-2" />
+                <LucidePlus className="mr-2 size-4" />
                 Create Webhook
               </>
             )}

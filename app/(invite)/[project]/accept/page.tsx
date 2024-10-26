@@ -62,7 +62,7 @@ export default function Invite() {
       >
         <CardContent className="grid gap-4">
           {state ? (
-            <p className="p-4 rounded-xl border border-destructive border-dashed font-bold overflow-hidden w-full text-xs text-destructive">
+            <p className="w-full overflow-hidden rounded-xl border border-dashed border-destructive p-4 text-xs font-bold text-destructive">
               {state}
             </p>
           ) : null}
@@ -83,7 +83,7 @@ export default function Invite() {
         <CardFooter>
           <Button className="w-full" type="submit" disabled={loading}>
             {loading && (
-              <LucideLoader2 className="animate-spin size-3.5 mr-2" />
+              <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
             )}
             Accept Invite
           </Button>

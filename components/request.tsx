@@ -28,29 +28,29 @@ export function Request({ timestamp, headers, body, type }: RequestProps) {
         exit={{ opacity: 0, height: 0 }}
         transition={{ duration: 0.25 }}
       >
-        <Card className="w-full h-full bg-muted/25">
-          <CardHeader className="flex flex-row gap-2 items-center justify-between mb-4 p-2">
-            <div className="flex flex-row gap-2 items-center">
+        <Card className="h-full w-full bg-muted/25">
+          <CardHeader className="mb-4 flex flex-row items-center justify-between gap-2 p-2">
+            <div className="flex flex-row items-center gap-2">
               <Badge variant={type} className="uppercase">
                 {type}
               </Badge>
-              <p className="text-muted-foreground text-xs font-semibold">
+              <p className="text-xs font-semibold text-muted-foreground">
                 {timestamp}
               </p>
             </div>
           </CardHeader>
           <CardContent className="p-2">
             <div className="mb-4">
-              <h4 className="font-semibold text-foreground text-sm mb-2 ml-2">
+              <h4 className="mb-2 ml-2 text-sm font-semibold text-foreground">
                 Headers
               </h4>
-              <div className="rounded-xl border border-dashed overflow-x-auto bg-background">
+              <div className="overflow-x-auto rounded-xl border border-dashed bg-background">
                 {headerObj && Object.keys(headerObj).length > 0 && (
                   <Table>
                     <TableBody>
                       {Object.entries(headerObj).map(([key, value]) => (
                         <TableRow key={key}>
-                          <TableCell className="text-xs whitespace-nowrap">
+                          <TableCell className="whitespace-nowrap text-xs">
                             {key}
                           </TableCell>
                           <TableCell className="text-xs">{value}</TableCell>
@@ -60,17 +60,17 @@ export function Request({ timestamp, headers, body, type }: RequestProps) {
                   </Table>
                 )}
                 {(headerObj == null || Object.keys(headerObj).length === 0) && (
-                  <p className="p-4 text-muted-foreground font-bold text-xs">
+                  <p className="p-4 text-xs font-bold text-muted-foreground">
                     No header values found.
                   </p>
                 )}
               </div>
             </div>
             <div>
-              <h4 className="font-semibold text-foreground text-sm mb-2 ml-2">
+              <h4 className="mb-2 ml-2 text-sm font-semibold text-foreground">
                 Body
               </h4>
-              <div className="p-4 rounded-xl border border-dashed bg-background code">
+              <div className="code rounded-xl border border-dashed bg-background p-4">
                 {body ? (
                   <SyntaxHighlighter
                     language="js"
@@ -80,7 +80,7 @@ export function Request({ timestamp, headers, body, type }: RequestProps) {
                     {JSON.stringify(JSON.parse(body), null, 2)}
                   </SyntaxHighlighter>
                 ) : (
-                  <p className="text-muted-foreground font-bold text-xs">
+                  <p className="text-xs font-bold text-muted-foreground">
                     No body data found.
                   </p>
                 )}

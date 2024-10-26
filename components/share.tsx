@@ -128,9 +128,9 @@ function Form({ className, setOpen }: FormProps) {
       </div>
       <Button type="submit" disabled={loadingShareWebhook}>
         {loadingShareWebhook ? (
-          <LucideLoader2 className="animate-spin size-3.5 mr-2" />
+          <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
         ) : (
-          <LucideShare2 className="size-3.5 mr-2" />
+          <LucideShare2 className="mr-2 size-3.5" />
         )}
         Share
       </Button>
