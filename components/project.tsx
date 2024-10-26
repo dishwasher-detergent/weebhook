@@ -21,15 +21,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Project as ProjectItem } from "@/interfaces/project.interface";
 import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
 import { DATABASE_ID, HOSTNAME, PROJECT_COLLECTION_ID } from "@/lib/constants";
-import { cn, createWebhook, deleteWebhook } from "@/lib/utils";
-import { Query } from "appwrite";
+import { cn, createWebhook, deleteWebhook, leaveWebhook } from "@/lib/utils";
 
+import { Query } from "appwrite";
 import { useAtom } from "jotai";
 import {
   Check,
   ChevronsUpDown,
   LucideCopy,
   LucideCopyCheck,
+  LucideDoorOpen,
   LucideLoader2,
   LucidePlus,
   LucideTrash,
@@ -50,8 +51,10 @@ export function Project() {
   const [loadingDeleteWebhook, setLoadingDeleteWebhook] =
     useState<boolean>(false);
   const [copy, setCopy] = useState<boolean>(false);
-  const [owner, setOwner] = useState(false);
-  const [loadingAuth, setLoadingAuth] = useState(true);
+  const [owner, setOwner] = useState<boolean>(false);
+  const [loadingAuth, setLoadingAuth] = useState<boolean>(true);
+  const [loadingLeaveWebhook, setLoadingLeaveWebhook] =
+    useState<boolean>(false);
 
   async function fetchProjects() {
     setLoading(true);
@@ -78,6 +81,7 @@ export function Project() {
   useEffect(() => {
     async function checkAuthorization() {
       setLoadingAuth(true);
+      setOwner(false);
       const { team } = await createClient();
       const user = await getLoggedInUser();
 
@@ -86,7 +90,6 @@ export function Project() {
           Query.equal("userId", user.$id),
         ]);
 
-        console.log(memberships);
         if (memberships.memberships[0].roles.includes("owner")) {
           setOwner(true);
         }
@@ -127,6 +130,25 @@ export function Project() {
     }
 
     setLoadingDeleteWebhook(false);
+  }
+
+  async function leave() {
+    setLoadingLeaveWebhook(true);
+
+    if (projectId) {
+      const project = await leaveWebhook(projectId);
+      await fetchProjects();
+
+      if (project) {
+        setprojectId(project);
+        router.push(project);
+      } else {
+        setprojectId(null);
+        router.push("/");
+      }
+    }
+
+    setLoadingLeaveWebhook(false);
   }
 
   function onCopy() {
@@ -243,25 +265,37 @@ export function Project() {
                 )}
               </Button>
             </CopyToClipboard>
-            {owner && !loadingAuth && <Share />}
-            {owner && !loadingAuth && (
-              <Button
-                onClick={deleteWH}
-                variant="destructive"
-                size="icon"
-                className="flex-none size-8"
-              >
-                {loadingDeleteWebhook ? (
-                  <LucideLoader2 className="animate-spin size-3.5" />
-                ) : (
-                  <LucideTrash className="size-3.5" />
-                )}
-              </Button>
-            )}
-            {!owner && loadingAuth && (
+            {!loadingAuth && (
               <>
-                <Skeleton className="size-8" />
-                <Skeleton className="size-8" />
+                {owner && <Share />}
+                {owner && (
+                  <Button
+                    onClick={deleteWH}
+                    variant="destructive"
+                    size="icon"
+                    className="flex-none size-8"
+                  >
+                    {loadingDeleteWebhook ? (
+                      <LucideLoader2 className="animate-spin size-3.5" />
+                    ) : (
+                      <LucideTrash className="size-3.5" />
+                    )}
+                  </Button>
+                )}
+                {!owner && (
+                  <Button
+                    variant="destructive"
+                    size="icon"
+                    className="flex-none size-8"
+                    onClick={leave}
+                  >
+                    {loadingLeaveWebhook ? (
+                      <LucideLoader2 className="animate-spin size-3.5" />
+                    ) : (
+                      <LucideDoorOpen className="size-3.5" />
+                    )}
+                  </Button>
+                )}
               </>
             )}
           </div>

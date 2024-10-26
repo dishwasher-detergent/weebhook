@@ -150,6 +150,49 @@ export async function deleteWebhook(projectId: string) {
   return null;
 }
 
+export async function leaveWebhook(projectId: string) {
+  const { database, team } = await createClient();
+  const user = await getLoggedInUser();
+
+  if (!user) {
+    return;
+  }
+
+  const memberships = await team.listMemberships(projectId, [
+    Query.equal("userId", user.$id),
+  ]);
+
+  const membership = memberships.memberships[0];
+
+  if (!membership) {
+    toast.error(
+      `An error occured while leaving ${projectId}, please try again.`
+    );
+    return;
+  }
+
+  if (membership.roles.includes("owner")) {
+    toast.error("The owner cannot leave their own webhook, delete it instead.");
+    return;
+  }
+
+  await team.deleteMembership(projectId, membership.$id);
+
+  const data = await database.listDocuments(
+    DATABASE_ID,
+    PROJECT_COLLECTION_ID,
+    [Query.orderDesc("$createdAt"), Query.limit(1)]
+  );
+
+  toast.error(`You've left ${projectId}!`);
+
+  if (data.documents.length > 0) {
+    return data.documents[0].$id;
+  }
+
+  return null;
+}
+
 export async function shareWebhook(projectId: string, email: string) {
   const { team } = await createClient();
 
