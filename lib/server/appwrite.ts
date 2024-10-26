@@ -11,19 +11,24 @@ import {
   Users,
 } from "node-appwrite";
 
-export async function createSessionClient() {
+export async function createSessionClient(setSession: boolean = true) {
   const client = new Client().setEndpoint(ENDPOINT).setProject(PROJECT_ID);
 
-  const session = (await cookies()).get(COOKIE_KEY);
-  if (!session || !session.value) {
-    throw new Error("No session");
-  }
+  if (setSession) {
+    const session = (await cookies()).get(COOKIE_KEY);
+    if (!session || !session.value) {
+      throw new Error("No session");
+    }
 
-  client.setSession(session.value);
+    client.setSession(session.value);
+  }
 
   return {
     get account() {
       return new Account(client);
+    },
+    get team() {
+      return new Teams(client);
     },
     get database() {
       return new Databases(client);

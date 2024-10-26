@@ -160,7 +160,7 @@ export async function shareWebhook(projectId: string, email: string) {
       email,
       undefined,
       undefined,
-      `${location.protocol}//${HOSTNAME}/${projectId}`,
+      `${location.protocol}//${HOSTNAME}/${projectId}/accept`,
       undefined
     );
   } catch {

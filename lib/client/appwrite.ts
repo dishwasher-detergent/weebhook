@@ -9,7 +9,7 @@ export async function createClient() {
 
   const req = await fetch("/api/auth/session");
 
-  const session = await req.json();
+  const { session } = await req.json();
 
   if (session) {
     client.setSession(session.value);

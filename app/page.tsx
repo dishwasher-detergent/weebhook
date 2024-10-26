@@ -29,6 +29,10 @@ export default function Home() {
         router.push("/login");
       }
 
+      if (projectId) {
+        router.push(projectId);
+      }
+
       const data = await database.listDocuments(
         DATABASE_ID,
         PROJECT_COLLECTION_ID,
@@ -43,11 +47,7 @@ export default function Home() {
       setIsLoading(false);
     }
 
-    if (!projectId) {
-      getProjects();
-    } else {
-      router.replace(projectId);
-    }
+    getProjects();
   }, [projectId]);
 
   async function create() {
