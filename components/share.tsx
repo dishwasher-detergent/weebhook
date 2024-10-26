@@ -87,12 +87,12 @@ interface FormProps extends React.ComponentProps<"form"> {
 function Form({ className, setOpen }: FormProps) {
   const [projectId, _] = useAtom(projectIdAtom);
 
-  const [isLoadingShareWebhook, setIsLoadingShareWebhook] =
+  const [loadingShareWebhook, setLoadingShareWebhook] =
     useState<boolean>(false);
   const [email, setEmail] = useState<string | null>(null);
 
   async function share() {
-    setIsLoadingShareWebhook(true);
+    setLoadingShareWebhook(true);
 
     if (!projectId) {
       toast.error("No webhook specified!");
@@ -106,12 +106,18 @@ function Form({ className, setOpen }: FormProps) {
 
     await shareWebhook(projectId, email);
 
-    setIsLoadingShareWebhook(false);
+    setLoadingShareWebhook(false);
     setOpen(false);
   }
 
   return (
-    <div className={cn("grid items-start gap-4", className)}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        share();
+      }}
+      className={cn("grid items-start gap-4", className)}
+    >
       <div className="grid gap-2">
         <Label htmlFor="email">Email Address</Label>
         <Input
@@ -120,14 +126,14 @@ function Form({ className, setOpen }: FormProps) {
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
-      <Button onClick={share}>
-        {isLoadingShareWebhook ? (
+      <Button type="submit" disabled={loadingShareWebhook}>
+        {loadingShareWebhook ? (
           <LucideLoader2 className="animate-spin size-3.5 mr-2" />
         ) : (
           <LucideShare2 className="size-3.5 mr-2" />
         )}
         Share
       </Button>
-    </div>
+    </form>
   );
 }

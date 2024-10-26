@@ -43,10 +43,10 @@ export function Project() {
   const [projectId, setprojectId] = useAtom(projectIdAtom);
   const [open, setOpen] = useState(false);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
-  const [isLoading, setLoading] = useState<boolean>(true);
-  const [isLoadingCreateWebhook, setIsLoadingCreateWebhook] =
+  const [loading, setLoading] = useState<boolean>(true);
+  const [loadingCreateWebhook, setLoadingCreateWebhook] =
     useState<boolean>(false);
-  const [isLoadingDeleteWebhook, setIsLoadingDeleteWebhook] =
+  const [loadingDeleteWebhook, setLoadingDeleteWebhook] =
     useState<boolean>(false);
   const [copy, setCopy] = useState<boolean>(false);
 
@@ -73,7 +73,7 @@ export function Project() {
   }, [projects]);
 
   async function create() {
-    setIsLoadingCreateWebhook(true);
+    setLoadingCreateWebhook(true);
     const data = await createWebhook();
 
     if (data) {
@@ -82,11 +82,11 @@ export function Project() {
       router.push(data.$id);
     }
 
-    setIsLoadingCreateWebhook(false);
+    setLoadingCreateWebhook(false);
   }
 
   async function deleteWH() {
-    setIsLoadingDeleteWebhook(true);
+    setLoadingDeleteWebhook(true);
 
     if (projectId) {
       const project = await deleteWebhook(projectId);
@@ -101,7 +101,7 @@ export function Project() {
       }
     }
 
-    setIsLoadingDeleteWebhook(false);
+    setLoadingDeleteWebhook(false);
   }
 
   function onCopy() {
@@ -115,9 +115,9 @@ export function Project() {
   return (
     <div>
       <p className="font-bold text-foreground text-sm mb-1">Endpoint</p>
-      {projects.length == 0 && !isLoading ? (
+      {projects.length == 0 && !loading ? (
         <Button onClick={create} size="sm">
-          {isLoadingCreateWebhook ? (
+          {loadingCreateWebhook ? (
             <>
               <LucideLoader2 className="animate-spin size-4 mr-2" />
               Creating Webhook
@@ -130,8 +130,8 @@ export function Project() {
           )}
         </Button>
       ) : null}
-      {isLoading && <Skeleton className="h-8" />}
-      {projects.length > 0 && !isLoading && (
+      {loading && <Skeleton className="h-8" />}
+      {projects.length > 0 && !loading && (
         <div className="flex flex-col md:flex-row gap-1">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -196,7 +196,7 @@ export function Project() {
               size="icon"
               className="flex-none size-8"
             >
-              {isLoadingCreateWebhook ? (
+              {loadingCreateWebhook ? (
                 <LucideLoader2 className="animate-spin size-3.5" />
               ) : (
                 <LucidePlus className="size-3.5" />
@@ -226,7 +226,7 @@ export function Project() {
               size="icon"
               className="flex-none size-8"
             >
-              {isLoadingDeleteWebhook ? (
+              {loadingDeleteWebhook ? (
                 <LucideLoader2 className="animate-spin size-3.5" />
               ) : (
                 <LucideTrash className="size-3.5" />

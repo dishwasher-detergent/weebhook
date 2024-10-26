@@ -14,23 +14,25 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [projectId, setprojectId] = useAtom(projectIdAtom);
-  const [isLoadingCreateWebhook, setIsLoadingCreateWebhook] =
+  const [loadingCreateWebhook, setLoadingCreateWebhook] =
     useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
     async function getProjects() {
-      setIsLoading(true);
+      setLoading(true);
       const { database } = await createClient();
       const user = await getLoggedInUser();
 
       if (!user) {
         router.push("/login");
+        return;
       }
 
       if (projectId) {
         router.push(projectId);
+        return;
       }
 
       const data = await database.listDocuments(
@@ -44,14 +46,14 @@ export default function Home() {
         router.replace(data.documents[0].$id);
       }
 
-      setIsLoading(false);
+      setLoading(false);
     }
 
     getProjects();
   }, [projectId]);
 
   async function create() {
-    setIsLoadingCreateWebhook(true);
+    setLoadingCreateWebhook(true);
     const data = await createWebhook();
 
     if (data) {
@@ -59,25 +61,25 @@ export default function Home() {
       router.push(data.$id);
     }
 
-    setIsLoadingCreateWebhook(false);
+    setLoadingCreateWebhook(false);
   }
 
   return (
     <main className="grid place-items-center w-full min-h-dvh">
-      {isLoading && (
+      {loading && (
         <p className="flex flex-row gap-2 items-center">
           <LucideLoader2 className="animate-spin size-4" />
           Checking for existing webhooks
         </p>
       )}
-      {!isLoading && (
+      {!loading && (
         <div className="flex flex-col items-center gap-2">
           <h1 className="font-bold text-xl">
             Looks like you don&apos;t have any webhooks created yet.
           </h1>
           <p>Lets get started!</p>
           <Button onClick={create}>
-            {isLoadingCreateWebhook ? (
+            {loadingCreateWebhook ? (
               <>
                 <LucideLoader2 className="animate-spin size-4 mr-2" />
                 Creating Webhook
