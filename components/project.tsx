@@ -19,9 +19,10 @@ import {
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Project as ProjectItem } from "@/interfaces/project.interface";
-import { createClient } from "@/lib/client/appwrite";
+import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
 import { DATABASE_ID, HOSTNAME, PROJECT_COLLECTION_ID } from "@/lib/constants";
 import { cn, createWebhook, deleteWebhook } from "@/lib/utils";
+import { Query } from "appwrite";
 
 import { useAtom } from "jotai";
 import {
@@ -49,6 +50,8 @@ export function Project() {
   const [loadingDeleteWebhook, setLoadingDeleteWebhook] =
     useState<boolean>(false);
   const [copy, setCopy] = useState<boolean>(false);
+  const [owner, setOwner] = useState(false);
+  const [loadingAuth, setLoadingAuth] = useState(true);
 
   async function fetchProjects() {
     setLoading(true);
@@ -71,6 +74,28 @@ export function Project() {
       fetchProjects();
     }
   }, [projects]);
+
+  useEffect(() => {
+    async function checkAuthorization() {
+      setLoadingAuth(true);
+      const { team } = await createClient();
+      const user = await getLoggedInUser();
+
+      if (user && projectId) {
+        const memberships = await team.listMemberships(projectId, [
+          Query.equal("userId", user.$id),
+        ]);
+
+        console.log(memberships);
+        if (memberships.memberships[0].roles.includes("owner")) {
+          setOwner(true);
+        }
+      }
+      setLoadingAuth(false);
+    }
+
+    checkAuthorization();
+  }, [projectId]);
 
   async function create() {
     setLoadingCreateWebhook(true);
@@ -218,20 +243,27 @@ export function Project() {
                 )}
               </Button>
             </CopyToClipboard>
-            <Share />
-
-            <Button
-              onClick={deleteWH}
-              variant="destructive"
-              size="icon"
-              className="flex-none size-8"
-            >
-              {loadingDeleteWebhook ? (
-                <LucideLoader2 className="animate-spin size-3.5" />
-              ) : (
-                <LucideTrash className="size-3.5" />
-              )}
-            </Button>
+            {owner && !loadingAuth && <Share />}
+            {owner && !loadingAuth && (
+              <Button
+                onClick={deleteWH}
+                variant="destructive"
+                size="icon"
+                className="flex-none size-8"
+              >
+                {loadingDeleteWebhook ? (
+                  <LucideLoader2 className="animate-spin size-3.5" />
+                ) : (
+                  <LucideTrash className="size-3.5" />
+                )}
+              </Button>
+            )}
+            {!owner && loadingAuth && (
+              <>
+                <Skeleton className="size-8" />
+                <Skeleton className="size-8" />
+              </>
+            )}
           </div>
         </div>
       )}
