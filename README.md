@@ -35,20 +35,15 @@ cd weebhook
 npm install
 ```
 
+### Set up Appwrite:
+(Must have the Appwrite CLI installed, https://www.npmjs.com/package/appwrite-cli)
+
+1. `appwrite login`
+2. `appwrite push (Select settings, and collections)`
+
 ### Set up environment variables:
 
-Create a .env.local file in the root directory and configure the following:
-
-```bash
-NEXT_PUBLIC_ROOT_DOMAIN: Your apps domain, for local development use localhost:3000
-
-NEXT_PUBLIC_APPWRITE_PROJECT_ID: The project ID.
-NEXT_PUBLIC_DATABASE_ID: The database ID.
-APPWRITE_API_KEY:  Your Appwrite API key, with permissions - session.write, users.read, users.write, teams.read, teams.write, documents.read, documents.write, files.read, files.write
-
-NEXT_PUBLIC_REQUEST_COLLECTION_ID: The request collection ID.
-NEXT_PUBLIC_PROJECT_COLLECTION_ID: The project collection ID.
-```
+Create an .env file based on the .env.sample.
 
 ### Run the development server:
 
