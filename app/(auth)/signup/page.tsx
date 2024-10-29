@@ -25,7 +25,7 @@ const initialState = {
 
 export default function SignUpPage() {
   const router = useRouter();
-  const [state, formAction] = useActionState(signUpWithEmail, initialState);
+  const [state, formAction, isPending] = useActionState(signUpWithEmail, initialState);
 
   useEffect(() => {
     if (state.success) {
