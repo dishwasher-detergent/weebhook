@@ -65,7 +65,7 @@ export default function Home() {
   }
 
   return (
-    <main className="grid min-h-dvh w-full place-items-center">
+    <main className="grid min-h-dvh w-full place-items-center p-4">
       {loading && (
         <p className="flex flex-row items-center gap-2">
           <LucideLoader2 className="size-4 animate-spin" />
@@ -74,7 +74,7 @@ export default function Home() {
       )}
       {!loading && (
         <div className="flex flex-col items-center gap-2">
-          <h1 className="text-xl font-bold">
+          <h1 className="text-xl font-bold text-center">
             Looks like you don&apos;t have any webhooks created yet.
           </h1>
           <p>Lets get started!</p>

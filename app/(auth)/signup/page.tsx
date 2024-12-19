@@ -16,6 +16,7 @@ import { signUpWithEmail } from "./action";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
+import { LucideLoader2 } from "lucide-react";
 
 const initialState = {
   message: "",
@@ -24,7 +25,7 @@ const initialState = {
 
 export default function SignUpPage() {
   const router = useRouter();
-  const [state, formAction] = useActionState(signUpWithEmail, initialState);
+  const [state, formAction, isPending] = useActionState(signUpWithEmail, initialState);
 
   useEffect(() => {
     if (state.success) {
@@ -70,7 +71,10 @@ export default function SignUpPage() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full" type="submit">
+        <Button className="w-full" type="submit" disabled={isPending}>
+            {isPending && (
+              <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
+            )}
             Create Account
           </Button>
         </CardFooter>
