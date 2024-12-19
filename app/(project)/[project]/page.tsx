@@ -61,8 +61,6 @@ export default function ProjectPage() {
     })) as ChartData[];
   }, [requests]);
 
-  console.log(requestsData);
-
   return (
     <>
       <main className="mx-auto max-w-4xl space-y-4 p-4 px-4 md:px-8">
