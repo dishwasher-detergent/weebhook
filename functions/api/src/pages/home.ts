@@ -8,7 +8,7 @@ import {
 } from '../lib/appwrite.js';
 
 export function Home(app: Hono, cacheDuration: number = 1440) {
-  app.get('/projects/:project_id', async (c) => {
+  app.post('/projects/:project_id', async (c) => {
     const projectId = c.req.param('project_id');
 
     if (!projectId) {
