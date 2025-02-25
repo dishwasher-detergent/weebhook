@@ -1,4 +1,4 @@
-import { Client, Databases, ID, Models, Query } from 'node-appwrite';
+import { Client, Databases, ID, Models } from 'node-appwrite';
 
 export const ENDPOINT = process.env.APPWRITE_FUNCTION_API_ENDPOINT as string;
 export const PROJECT_ID = process.env.APPWRITE_FUNCTION_PROJECT_ID as string;
