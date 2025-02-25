@@ -9,7 +9,7 @@ import {
 
 export function Home(app: Hono, cacheDuration: number = 1440) {
   app.get('/projects/:project_id', async (c) => {
-    const projectId = c.req.param('organization_id');
+    const projectId = c.req.param('project_id');
 
     if (!projectId) {
       return c.json('Project ID is required', 400);
