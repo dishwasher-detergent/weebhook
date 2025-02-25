@@ -15,10 +15,20 @@ export function Home(app: Hono, cacheDuration: number = 1440) {
       return c.json('Project ID is required', 400);
     }
 
-    const headers = Object.fromEntries(Object.entries(c.req.header()));
+    const headersToRemove = [
+      'authorization',
+      'cdn-loop',
+      'cf-connecting-ip',
+      'cf-ipcountry',
+      'cf-ray',
+      'cf-visitor',
+    ];
 
-    console.log(headers);
-    console.log(c.req.header());
+    const headers = Object.fromEntries(
+      Object.entries(c.req.header()).filter(
+        ([key]) => !headersToRemove.includes(key.toLowerCase())
+      )
+    );
 
     let res = {};
 
