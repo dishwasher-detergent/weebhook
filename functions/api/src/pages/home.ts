@@ -15,10 +15,10 @@ export function Home(app: Hono, cacheDuration: number = 1440) {
       return c.json('Project ID is required', 400);
     }
 
-    const headers = Object.fromEntries(Object.entries(c.req.header));
+    const headers = Object.fromEntries(Object.entries(c.req.header()));
 
     console.log(headers);
-    console.log(c.req.header('asdf'));
+    console.log(c.req.header());
 
     let res = {};
 
