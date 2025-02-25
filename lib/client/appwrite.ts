@@ -19,8 +19,12 @@ export async function createClient() {
     Cookies.set(`${COOKIE_KEY}_legacy`, session.value);
 
     // Set session in localStorage for legacy support
-    localStorage.setItem(COOKIE_KEY, session.value);
-    localStorage.setItem(`${COOKIE_KEY}_legacy`, session.value);
+    const cookieFallback = {
+      [COOKIE_KEY]: session.value,
+      [`${COOKIE_KEY}_legacy`]: session.value,
+    };
+
+    localStorage.setItem("cookieFallback", JSON.stringify(cookieFallback));
   }
 
   return {
