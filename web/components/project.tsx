@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Project as ProjectItem } from "@/interfaces/project.interface";
-import { HOSTNAME } from "@/lib/constants";
+import { FUNCTION_DOMAIN, HOSTNAME } from "@/lib/constants";
 import {
   checkAuth,
   createProject,
@@ -204,11 +204,7 @@ export function Project() {
                 className="w-full justify-between truncate font-normal text-muted-foreground md:w-auto"
               >
                 <span className="truncate">
-                  {location.protocol}&#47;&#47;
-                  <span className="font-bold text-foreground">
-                    {projectId ?? "not-found"}
-                  </span>
-                  .{HOSTNAME}
+                  projects/{projectId ?? "not-found"}
                 </span>
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
@@ -264,7 +260,7 @@ export function Project() {
               )}
             </Button>
             <CopyToClipboard
-              text={`${location.protocol}//${projectId}.${HOSTNAME}`}
+              text={`${FUNCTION_DOMAIN}/projects/${projectId}`}
               onCopy={onCopy}
             >
               <Button

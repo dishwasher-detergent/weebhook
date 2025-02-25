@@ -7,14 +7,19 @@ import { Request as RequestInterface } from "@/interfaces/request.interface";
 import { Request } from "@/components/request";
 import { NoRequests } from "@/components/no-requests";
 import { useRequests } from "@/hooks/useRequests";
+import { useParams } from "next/navigation";
 
 interface RequestsProps {
   requests: RequestInterface[];
 }
 
 export default function Requests({ requests: initialRequests }: RequestsProps) {
+  const { project } = useParams<{
+    project: string;
+  }>();
+
   const { requests, loading } = useRequests({
-    projectId: "",
+    projectId: project,
     initalRequests: initialRequests,
   });
 
