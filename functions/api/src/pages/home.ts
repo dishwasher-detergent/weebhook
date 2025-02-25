@@ -29,6 +29,7 @@ export function Home(app: Hono, cacheDuration: number = 1440) {
     try {
       await database_service.get(PROJECT_COLLECTION_ID, projectId);
     } catch {
+      console.log(`Project ID '${projectId}' was not found.`);
       return c.json(`Project ID '${projectId}' was not found.`, 404);
     }
 
