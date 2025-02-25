@@ -1,6 +1,5 @@
 "use client";
 
-import { projectIdAtom } from "@/atoms/project";
 import { Share } from "@/components/share";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,12 +18,16 @@ import {
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Project as ProjectItem } from "@/interfaces/project.interface";
-import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
-import { DATABASE_ID, HOSTNAME, PROJECT_COLLECTION_ID } from "@/lib/constants";
-import { cn, createWebhook, deleteWebhook, leaveWebhook } from "@/lib/utils";
+import { HOSTNAME } from "@/lib/constants";
+import {
+  checkAuth,
+  createProject,
+  deleteProject,
+  getProjects,
+  leaveProject,
+} from "@/lib/server/utils";
+import { cn } from "@/lib/utils";
 
-import { Query } from "appwrite";
-import { useAtom } from "jotai";
 import {
   Check,
   ChevronsUpDown,
@@ -35,14 +38,18 @@ import {
   LucidePlus,
   LucideTrash,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { toast } from "sonner";
 
 export function Project() {
   const router = useRouter();
+  const { project } = useParams<{
+    project: string;
+  }>();
 
-  const [projectId, setprojectId] = useAtom(projectIdAtom);
+  const [projectId, setprojectId] = useState(project);
   const [open, setOpen] = useState(false);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -51,24 +58,51 @@ export function Project() {
   const [loadingDeleteWebhook, setLoadingDeleteWebhook] =
     useState<boolean>(false);
   const [copy, setCopy] = useState<boolean>(false);
-  const [owner, setOwner] = useState<boolean>(false);
-  const [loadingAuth, setLoadingAuth] = useState<boolean>(true);
   const [loadingLeaveWebhook, setLoadingLeaveWebhook] =
     useState<boolean>(false);
+  const [loadingAuth, setLoadingAuth] = useState<boolean>(true);
+  const [owner, setOwner] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (project) {
+      setprojectId(project);
+    }
+  }, [project]);
+
+  useEffect(() => {
+    async function checkAuthorization() {
+      setLoadingAuth(true);
+      setOwner(false);
+
+      const data = await checkAuth(projectId);
+
+      if (!data.success) {
+        toast.error(data.message);
+        router.push("/");
+      }
+
+      if (data.data) {
+        setOwner(data.data.isOwner);
+      }
+
+      setLoadingAuth(false);
+    }
+
+    checkAuthorization();
+  }, [projectId]);
 
   async function fetchProjects() {
     setLoading(true);
-    const { database } = await createClient();
 
-    const data = await database.listDocuments<ProjectItem>(
-      DATABASE_ID,
-      PROJECT_COLLECTION_ID,
-    );
+    const data = await getProjects();
 
-    if (data.documents.length > 0) {
-      setProjects(data.documents);
+    if (!data.success) {
+      toast.error(data.message);
     }
 
+    if (data?.data) {
+      setProjects(data.data);
+    }
     setLoading(false);
   }
 
@@ -78,53 +112,35 @@ export function Project() {
     }
   }, [projects]);
 
-  useEffect(() => {
-    async function checkAuthorization() {
-      setLoadingAuth(true);
-      setOwner(false);
-      const { team } = await createClient();
-      const user = await getLoggedInUser();
-
-      if (user && projectId) {
-        const memberships = await team.listMemberships(projectId, [
-          Query.equal("userId", user.$id),
-        ]);
-
-        if (memberships.memberships[0].roles.includes("owner")) {
-          setOwner(true);
-        }
-      }
-      setLoadingAuth(false);
-    }
-
-    checkAuthorization();
-  }, [projectId]);
-
   async function create() {
     setLoadingCreateWebhook(true);
-    const data = await createWebhook();
+    const data = await createProject();
 
-    if (data) {
-      setProjects((prev) => [...prev, data]);
-      setprojectId(data.$id);
-      router.push(data.$id);
+    if (!data.success) {
+      toast.error(data.message);
+    }
+
+    if (data.data) {
+      router.push(`/project/${data.data.$id}`);
     }
 
     setLoadingCreateWebhook(false);
   }
 
-  async function deleteWH() {
+  async function deleteProj() {
     setLoadingDeleteWebhook(true);
 
     if (projectId) {
-      const project = await deleteWebhook(projectId);
+      const data = await deleteProject(projectId);
       await fetchProjects();
 
-      if (project) {
-        setprojectId(project);
-        router.push(project);
+      if (!data.success) {
+        toast.error(data.message);
+      }
+
+      if (data.success && data.data) {
+        router.push(data.data);
       } else {
-        setprojectId(null);
         router.push("/");
       }
     }
@@ -136,14 +152,12 @@ export function Project() {
     setLoadingLeaveWebhook(true);
 
     if (projectId) {
-      const project = await leaveWebhook(projectId);
+      const project = await leaveProject(projectId);
       await fetchProjects();
 
-      if (project) {
-        setprojectId(project);
-        router.push(project);
+      if (project.success && project.data) {
+        router.push(project.data);
       } else {
-        setprojectId(null);
         router.push("/");
       }
     }
@@ -270,7 +284,7 @@ export function Project() {
                 {owner && <Share />}
                 {owner && (
                   <Button
-                    onClick={deleteWH}
+                    onClick={deleteProj}
                     variant="destructive"
                     size="icon"
                     className="size-8 flex-none"

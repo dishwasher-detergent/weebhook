@@ -1,4 +1,3 @@
-import { projectIdAtom } from "@/atoms/project";
 import { Request as RequestItem } from "@/interfaces/request.interface";
 import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, REQUEST_COLLECTION_ID } from "@/lib/constants";
@@ -7,9 +6,13 @@ import { Client, Query } from "appwrite";
 import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 
-export const useRequests = () => {
-  const projectId = useAtomValue(projectIdAtom);
-  const [requests, setRequests] = useState<RequestItem[]>([]);
+interface Props {
+  projectId: string;
+  initalRequests?: RequestItem[];
+}
+
+export const useRequests = ({ projectId, initalRequests }: Props) => {
+  const [requests, setRequests] = useState<RequestItem[]>(initalRequests ?? []);
   const [loading, setLoading] = useState<boolean>(true);
   const [client, setClient] = useState<Client | null>(null);
 

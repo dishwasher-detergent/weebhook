@@ -1,6 +1,5 @@
 "use client";
 
-import { projectIdAtom } from "@/atoms/project";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,10 +22,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { cn, shareWebhook } from "@/lib/utils";
+import { shareProject } from "@/lib/server/utils";
+import { cn } from "@/lib/utils";
 
-import { useAtom } from "jotai";
 import { LucideLoader2, LucideShare2 } from "lucide-react";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -85,7 +85,9 @@ interface FormProps extends React.ComponentProps<"form"> {
 }
 
 function Form({ className, setOpen }: FormProps) {
-  const [projectId, _] = useAtom(projectIdAtom);
+  const { project: projectId } = useParams<{
+    project: string;
+  }>();
 
   const [loadingShareWebhook, setLoadingShareWebhook] =
     useState<boolean>(false);
@@ -95,7 +97,7 @@ function Form({ className, setOpen }: FormProps) {
     setLoadingShareWebhook(true);
 
     if (!projectId) {
-      toast.error("No webhook specified!");
+      toast.error("No project specified!");
       return;
     }
 
@@ -104,7 +106,7 @@ function Form({ className, setOpen }: FormProps) {
       return;
     }
 
-    await shareWebhook(projectId, email);
+    await shareProject(projectId, email);
 
     setLoadingShareWebhook(false);
     setOpen(false);
