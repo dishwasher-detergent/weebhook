@@ -31,11 +31,9 @@ export default async (context: Context) => {
   throwIfMissing(process.env, [
     'API_KEY',
     'DATABASE_ID',
-    'EXPERIENCE_COLLECTION_ID',
-    'ORGANIZATION_COLLECTION_ID',
-    'INFORMATION_COLLECTION_ID',
-    'PROJECTS_COLLECTION_ID',
-    'PROJECTS_BUCKET_ID',
+    'REQUEST_COLLECTION_ID',
+    'USER_COLLECTION_ID',
+    'PROJECT_COLLECTION_ID',
   ]);
 
   const request = requestFromContext(context);
