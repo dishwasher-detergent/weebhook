@@ -1,62 +1,29 @@
-# Weebhook
+Keep your portfolio up-to-date with all your latest and greatest creations!
 
-Weebhook is an application that allows you to generate custom URLs that can be used as webhook endpoints (e.g., save-took-with.weebhook.com). The application captures and displays the payloads received from various webhooks, enabling you to inspect and analyze them with ease.
+## Built using 
+- Next
+- Tailwind
+- Appwrite
 
-### Features
+## Using Appwrite Cloud
+You will need to setup an Appwrite Cloud account. [Sign up here.](https://cloud.appwrite.io/register)
 
-- Custom URL generation for setting as webhook endpoints.
-- Payload Viewer to inspect and store payloads from webhook requests.
+Once everything above is done, you can run these commands below.
+1. appwrite login
+2. appwrite deploy collection
+   - use **space** to select all collections
+4. appwrite deploy function
+   - use **space** to select all functions
+   - Update env variables based on the example.env files in each function directory.
 
-### Tech Stack
+## Self Hosting
+You will need to setup your own [Appwrite](appwrite.io) instance, at this time Appwrite cloud does not support relationships so you will need to self host Appwrite version 1.3.7+ yourself. You can easily self host your own instance of Appwrite using Digital Ocean. [Find that here](https://marketplace.digitalocean.com/apps/appwrite)
 
-- Next.js: React framework for building server-rendered and static web applications.
-- Tailwind CSS: Utility-first CSS framework for styling.
-- Appwrite: Backend-as-a-service for managing authentication, databases, and more.
+Once everything above is done, you can run these commands below.
+1. appwrite login
+2. appwrite deploy collection
+   - use **space** to select all collections
+4. appwrite deploy function
+   - use **space** to select all functions
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js (version 20.x or later)
-- Appwrite instance (You can use the Appwrite cloud or set up locally)
-
-### Installation
-
-Clone the repository:
-
-```bash
-git clone https://github.com/dishwasher-detergent/weebhook.git
-cd weebhook
-```
-
-### Install dependencies:
-
-```bash
-npm install
-```
-
-### Set up Appwrite:
-(Must have the Appwrite CLI installed, https://www.npmjs.com/package/appwrite-cli)
-
-1. `appwrite login`
-2. `appwrite push (Select settings, and collections)`
-
-### Set up environment variables:
-
-Create an .env file based on the .env.sample.
-
-### Run the development server:
-
-```bash
-npm run dev
-```
-
-The application should now be running at http://localhost:3000.
-
-### Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
-
-### License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
+## Congrats, you're done!
