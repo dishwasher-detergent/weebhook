@@ -17,26 +17,6 @@ export const useRequests = ({ projectId, initalRequests }: Props) => {
   const [client, setClient] = useState<Client | null>(null);
 
   useEffect(() => {
-    async function fetchRequests(projectId: string) {
-      setLoading(true);
-      const { database } = await createClient();
-
-      const data = await database.listDocuments<RequestItem>(
-        DATABASE_ID,
-        REQUEST_COLLECTION_ID,
-        [Query.equal("projectId", projectId), Query.orderDesc("$createdAt")],
-      );
-
-      setRequests(data.documents);
-      setLoading(false);
-    }
-
-    if (projectId && requests.length === 0) {
-      fetchRequests(projectId);
-    }
-  }, [projectId, requests.length]);
-
-  useEffect(() => {
     async function fetchClient() {
       const { client } = await createClient();
       setClient(client);
