@@ -18,7 +18,7 @@ export function Home(app: Hono, cacheDuration: number = 1440) {
     const headers = Object.fromEntries(Object.entries(c.req.header));
 
     console.log(headers);
-    console.log(c.req.header);
+    console.log(c.req.header('asdf'));
 
     let res = {};
 
