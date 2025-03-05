@@ -225,19 +225,20 @@ export function Project() {
                         onSelect={(currentValue) => {
                           setprojectId(currentValue);
                           setOpen(false);
-                          router.push(project.$id);
                         }}
                         className="cursor-pointer text-xs"
                       >
-                        <Check
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            projectId === project.$id
-                              ? "opacity-100"
-                              : "opacity-0",
-                          )}
-                        />
-                        {project.$id}
+                        <Link href={project.$id} className="w-full h-full flex flex-row gap-1">
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              projectId === project.$id
+                                ? "opacity-100"
+                                : "opacity-0",
+                            )}
+                          />
+                          {project.$id}
+                        </Link>
                       </CommandItem>
                     ))}
                   </CommandGroup>
