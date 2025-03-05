@@ -42,6 +42,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { toast } from "sonner";
+import Link from "next/link";
 
 export function Project() {
   const router = useRouter();
