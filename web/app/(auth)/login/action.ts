@@ -23,7 +23,7 @@ export async function signInWithEmail(prevState: any, formData: FormData) {
 
     return {
       success: true,
-      message: "Successfully logged in.",
+      message: "Login successful",
     };
   } catch (err) {
     const error = err as Error;

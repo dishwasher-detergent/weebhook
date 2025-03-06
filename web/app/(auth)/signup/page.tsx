@@ -17,6 +17,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { LucideLoader2 } from "lucide-react";
+import { toast } from "sonner";
 
 const initialState = {
   message: "",
@@ -25,29 +26,32 @@ const initialState = {
 
 export default function SignUpPage() {
   const router = useRouter();
-  const [state, formAction, isPending] = useActionState(signUpWithEmail, initialState);
+  const [state, formAction, isPending] = useActionState(
+    signUpWithEmail,
+    initialState,
+  );
 
   useEffect(() => {
     if (state.success) {
+      toast.success(state.message);
       router.push("/");
+    }
+
+    if (!state.success && state.message != "") {
+      toast.error(state.message);
     }
   }, [state]);
 
   return (
-    <Card className="w-full max-w-sm bg-muted/25">
+    <Card className="bg-muted/25 w-full max-w-sm">
       <CardHeader>
-        <CardTitle className="text-2xl">Create Account</CardTitle>
+        <CardTitle className="text-2xl">Sign Up</CardTitle>
         <CardDescription>
           Enter your email below to create to your account.
         </CardDescription>
       </CardHeader>
       <form action={formAction}>
         <CardContent className="grid gap-4">
-          {state.message != "" ? (
-            <p className="w-full overflow-hidden rounded-xl border border-dashed border-destructive p-4 text-xs font-bold text-destructive">
-              {state.message}
-            </p>
-          ) : null}
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -71,7 +75,7 @@ export default function SignUpPage() {
           </div>
         </CardContent>
         <CardFooter>
-        <Button className="w-full" type="submit" disabled={isPending}>
+          <Button className="w-full" type="submit" disabled={isPending}>
             {isPending && (
               <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
             )}
@@ -79,12 +83,12 @@ export default function SignUpPage() {
           </Button>
         </CardFooter>
         <CardFooter>
-          <p className="w-full overflow-hidden rounded-xl border border-dashed bg-background p-2 text-center text-sm text-xs font-bold text-muted-foreground">
+          <p className="border-primary/50 bg-background text-muted-foreground w-full overflow-hidden rounded-md border border-dashed p-2 text-center text-sm font-bold">
             Already have an account?
             <Button
               variant="link"
               asChild
-              className="p-1 text-xs font-bold text-muted-foreground"
+              className="text-muted-foreground p-1 text-xs font-bold"
             >
               <Link href="/login">Login here</Link>
             </Button>

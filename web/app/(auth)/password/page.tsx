@@ -61,7 +61,7 @@ export default function Password() {
   }, []);
 
   return (
-    <Card className="w-full max-w-sm bg-muted/25">
+    <Card className="bg-muted/25 w-full max-w-sm">
       <CardHeader>
         <CardTitle className="text-2xl">Create Password</CardTitle>
         <CardDescription>
@@ -76,7 +76,7 @@ export default function Password() {
       >
         <CardContent className="grid gap-4">
           {passwordState ? (
-            <p className="w-full overflow-hidden rounded-xl border border-dashed border-destructive p-4 text-xs font-bold text-destructive">
+            <p className="border-destructive text-destructive w-full overflow-hidden rounded-xl border border-dashed p-4 text-xs font-bold">
               {passwordState}
             </p>
           ) : null}
