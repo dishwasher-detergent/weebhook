@@ -197,9 +197,7 @@ export function Project() {
                 aria-expanded={open}
                 className="w-full justify-between truncate font-normal text-muted-foreground md:w-auto"
               >
-                <span className="truncate">
-                  projects/{projectId ?? "not-found"}
-                </span>
+                <span className="truncate">{projectId ?? "not-found"}</span>
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>

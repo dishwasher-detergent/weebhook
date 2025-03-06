@@ -18,7 +18,7 @@ export function Request({ timestamp, headers, body, type }: RequestProps) {
     : null;
 
   return (
-    <Card className="h-full w-full bg-muted/25">
+    <Card className="h-full w-full">
       <CardHeader className="mb-4 flex flex-row items-center justify-between gap-2 p-2">
         <div className="flex flex-row items-center gap-2">
           <Badge variant={type} className="uppercase">
