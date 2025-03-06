@@ -1,3 +1,5 @@
+import { RequestsChartLoading } from "@/components/request-chart-loading";
+import { RequestLoading } from "@/components/request-loading";
 import Requests from "@/components/requests";
 import { Badge } from "@/components/ui/badge";
 import { getProject } from "@/lib/server/utils";

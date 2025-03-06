@@ -46,11 +46,10 @@ import Link from "next/link";
 
 export function Project() {
   const router = useRouter();
-  const { project } = useParams<{
+  const { project: projectId } = useParams<{
     project: string;
   }>();
 
-  const [projectId, setprojectId] = useState(project);
   const [open, setOpen] = useState(false);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -63,12 +62,6 @@ export function Project() {
     useState<boolean>(false);
   const [loadingAuth, setLoadingAuth] = useState<boolean>(true);
   const [owner, setOwner] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (project) {
-      setprojectId(project);
-    }
-  }, [project]);
 
   useEffect(() => {
     async function checkAuthorization() {
@@ -224,12 +217,12 @@ export function Project() {
                         key={project.$id}
                         value={project.$id}
                         onSelect={(currentValue) => {
-                          setprojectId(currentValue);
                           setOpen(false);
                         }}
                         className="cursor-pointer text-xs"
+                        asChild
                       >
-                        <Link href={project.$id} className="w-full h-full flex flex-row gap-1">
+                        <Link href={project.$id}>
                           <Check
                             className={cn(
                               "mr-2 h-4 w-4",
